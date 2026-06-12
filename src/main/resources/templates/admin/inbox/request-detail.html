@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="#{admin.requests.detailTitle(${req.id})} + ' — ' + #{admin.title}">Sipariş Talebi — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title" th:text="#{admin.requests.detailTitle(${req.id})}">Sipariş Talebi #1</h1>
+        <a class="btn btn-ghost" th:href="@{/admin/siparis-talepleri}"
+           th:text="#{admin.action.back}">Geri</a>
+    </div>
+
+    <div class="form-banner form-banner-success" role="status" th:if="${flashSuccess}"
+         th:text="#{${flashSuccess}}">Kaydedildi.</div>
+    <div class="form-banner form-banner-error" role="alert" th:if="${flashError}"
+         th:text="#{${flashError}}">Hata.</div>
+
+    <div class="admin-detail-grid">
+        <div class="admin-detail-main">
+            <section class="admin-detail-block">
+                <h2 th:text="#{admin.requests.message.heading}">Müşteri mesajı</h2>
+                <p class="admin-pre" th:if="${req.message != null}" th:text="${req.message}">Mesaj.</p>
+                <p class="admin-detail-empty" th:if="${req.message == null}"
+                   th:text="#{admin.requests.message.empty}">Mesaj bırakılmamış.</p>
+            </section>
+
+            <section class="admin-detail-block">
+                <h2 th:text="#{admin.requests.items.heading}">Talep kalemleri</h2>
+                <p class="admin-detail-empty" th:if="${#lists.isEmpty(items)}"
+                   th:text="#{admin.requests.items.empty}">Bu talepte kalem yok.</p>
+                <table class="admin-table" th:unless="${#lists.isEmpty(items)}">
+                    <thead>
+                    <tr>
+                        <th th:text="#{admin.requests.items.col.product}">Ürün</th>
+                        <th th:text="#{admin.requests.items.col.variant}">Varyant</th>
+                        <th th:text="#{admin.requests.items.col.quantity}">Adet</th>
+                        <th th:text="#{admin.requests.items.col.unitPrice}">Birim fiyat</th>
+                        <th th:text="#{admin.requests.items.col.lineTotal}">Satır toplamı</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${items}">
+                        <td><a th:href="@{'/admin/urunler/' + ${item.productId}}"
+                               th:text="${item.productName}">Microline Kesim Makinesi</a></td>
+                        <td th:text="${item.variantName != null ? item.variantName : '—'}">Standart Paket</td>
+                        <td th:text="${item.quantity}">1</td>
+                        <td th:text="${item.unitPrice}">4.990 ₺</td>
+                        <td th:text="${item.lineTotal}">4.990 ₺</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="4" th:text="#{admin.requests.items.total}">Genel toplam</th>
+                        <th th:text="${totalText}">9.980 ₺</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </section>
+        </div>
+
+        <aside class="admin-detail-side">
+            <section class="admin-detail-block">
+                <h2 th:text="#{admin.requests.contact.heading}">İletişim bilgileri</h2>
+                <dl class="admin-detail-meta">
+                    <div>
+                        <dt th:text="#{admin.col.name}">Ad Soyad</dt>
+                        <dd th:text="${req.fullName}">Ad Soyad</dd>
+                    </div>
+                    <div>
+                        <dt th:text="#{admin.col.email}">E-posta</dt>
+                        <dd><a th:href="'mailto:' + ${req.email}" th:text="${req.email}">ornek@ornek.com</a></dd>
+                    </div>
+                    <div>
+                        <dt th:text="#{admin.requests.d.phone}">Telefon</dt>
+                        <dd><a th:href="'tel:' + ${req.phone}" th:text="${req.phone}">+90 555 000 00 00</a></dd>
+                    </div>
+                    <div>
+                        <dt th:text="#{admin.requests.d.locale}">Dil</dt>
+                        <dd th:text="${req.locale}">tr</dd>
+                    </div>
+                    <div>
+                        <dt th:text="#{admin.requests.d.ip}">IP adresi</dt>
+                        <dd th:text="${req.sourceIp != null ? req.sourceIp : '—'}">127.0.0.1</dd>
+                    </div>
+                    <div>
+                        <dt th:text="#{admin.requests.d.kvkk}">KVKK onayı</dt>
+                        <dd th:text="${req.kvkkConsent} ? #{common.yes} : #{common.no}">Evet</dd>
+                    </div>
+                    <div>
+                        <dt th:text="#{admin.col.date}">Tarih</dt>
+                        <dd th:text="${createdAtText}">01.01.2026 12:00</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <section class="admin-detail-block">
+                <h2 th:text="#{admin.requests.status.heading}">Durum</h2>
+                <p><span class="status-badge" th:classappend="'status-' + ${statusKey}"
+                         th:text="#{'admin.status.' + ${statusKey}}">Yeni</span></p>
+                <div class="admin-status-actions">
+                    <form method="post" th:each="action : ${statusActions}"
+                          th:action="@{'/admin/siparis-talepleri/' + ${req.id} + '/durum'}">
+                        <input type="hidden" name="status" th:value="${action.value}">
+                        <button class="btn btn-ghost btn-sm" type="submit"
+                                th:text="#{${action.labelKey}}">İletişime Geçildi Olarak İşaretle</button>
+                    </form>
+                </div>
+            </section>
+        </aside>
+    </div>
+</div>
+</body>
+</html>

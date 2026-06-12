@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<body>
+<!--/* Gelen kutusu listelerinin ortak parçaları. Parametre almazlar:
+       statusFilter/basePath/pageNumber/totalPages/hasPrev/hasNext model
+       attribute'larını AdminInboxController.addListModel doldurur. */-->
+
+<!--/* Durum filtre hapları: Tümü + üç durum. Aktif hap mevcut filtreyi gösterir. */-->
+<div class="admin-filter-pills" th:fragment="pills">
+    <a class="admin-filter-pill" th:href="@{${basePath}}"
+       th:classappend="${statusFilter == null} ? 'is-active'"
+       th:text="#{admin.filter.all}">Tümü</a>
+    <a class="admin-filter-pill" th:href="@{${basePath}(durum='NEW')}"
+       th:classappend="${statusFilter == 'NEW'} ? 'is-active'"
+       th:text="#{admin.filter.new}">Yeni</a>
+    <a class="admin-filter-pill" th:href="@{${basePath}(durum='CONTACTED')}"
+       th:classappend="${statusFilter == 'CONTACTED'} ? 'is-active'"
+       th:text="#{admin.filter.contacted}">İletişime geçildi</a>
+    <a class="admin-filter-pill" th:href="@{${basePath}(durum='CLOSED')}"
+       th:classappend="${statusFilter == 'CLOSED'} ? 'is-active'"
+       th:text="#{admin.filter.closed}">Kapatıldı</a>
+</div>
+
+<!--/* Önceki / "1 / N" / Sonraki — tek sayfada hiç basılmaz; filtre korunur. */-->
+<nav class="admin-pagination" th:fragment="pagination" th:if="${totalPages > 1}"
+     th:aria-label="#{admin.pagination.label}">
+    <a class="btn btn-ghost btn-sm" th:if="${hasPrev}"
+       th:href="${statusFilter != null}
+                ? @{${basePath}(durum=${statusFilter}, page=${pageNumber - 1})}
+                : @{${basePath}(page=${pageNumber - 1})}"
+       th:text="#{admin.pagination.prev}">Önceki</a>
+    <span class="admin-pagination-info"
+          th:text="#{admin.pagination.info(${pageNumber + 1}, ${totalPages})}">1 / 2</span>
+    <a class="btn btn-ghost btn-sm" th:if="${hasNext}"
+       th:href="${statusFilter != null}
+                ? @{${basePath}(durum=${statusFilter}, page=${pageNumber + 1})}
+                : @{${basePath}(page=${pageNumber + 1})}"
+       th:text="#{admin.pagination.next}">Sonraki</a>
+</nav>
+</body>
+</html>

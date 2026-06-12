@@ -8,5 +8,10 @@ spring:
 
 # Tüm testler 127.0.0.1'den gelir; üretim limiti (5/10dk) test akışını boğar
 microline:
+  # mvn clean ile birlikte temizlensin diye target/ altında
+  uploads-dir: target/test-uploads
   throttle:
     max-per-window: 1000
+  admin:
+    # Sabit şifre: AdminUserInitializer deterministik koşar, testler formLogin yapabilir
+    initial-password: test-admin-pass

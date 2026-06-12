@@ -90,6 +90,18 @@ export JAVA_HOME=$(/usr/libexec/java_home -v 21)   # JDK 21 ZORUNLU (sistem vars
 - CSRF açık (Thymeleaf `th:action` token'ı otomatik basar). Form spam koruması: honeypot + min-submit-time + IP throttle (captcha yok).
 - Yorum yazarken: koddan anlaşılmayan kısıtları yaz, "ne yaptığını" anlatma.
 
+## Backoffice (/admin)
+
+- Türkçe-tek-dil yönetim paneli; rotalar Türkçe (`/admin/urunler`, `/admin/siparis-talepleri` vb.), giriş `/admin/giris`, çıkış POST `/admin/cikis`.
+- **İlk admin**: tablo boşken `AdminUserInitializer` oluşturur — şifreyi `MICROLINE_ADMIN_INITIAL_PASSWORD` env değişkeniyle ver; boşsa rastgele üretilir ve WARN loglanır. Şifre yml'e/git'e YAZILMAZ.
+- İki SecurityFilterChain: @Order(1) `/admin/**` formLogin + ROLE_ADMIN; @Order(2) public. **Eager-CSRF filter ve CSP header'ları İKİ chain'de de paylaşılan metotlardan gelir** — birinden çıkarılırsa streaming yarım-sayfa bug'ı geri döner.
+- `GlobalModelAdvice` yalnız public controller'lara bağlıdır (`basePackageClasses` + hata sayfaları için `ErrorController`); admin kendi `AdminModelAdvice`'ını kullanır.
+- **Görsel yükleme**: `microline.uploads-dir` (dev `./uploads`, prod `/var/microline/uploads` — yedekleme planına dahil et!); `/uploads/**` resource handler'dan servis edilir. Magic-byte doğrulaması zorunlu (ImageStorageService); dosya adı daima UUID. Entity url alanları `/img/...` (seed) veya `/uploads/...` (admin) tutabilir.
+- **XSS güven modeli**: yasal/eğitim/ürün açıklaması HTML'i artık admin'in girdiği metindir ve `th:utext` ile olduğu gibi basılır (sanitizer yok — tek güvenilir admin). Admin hesabı ele geçirilirse stored XSS demektir; admin şifresi güçlü tutulmalı.
+- Form record'larında checkbox alanları **`Boolean`** (primitive değil!) — yoksa constructor binding null→typeMismatch ve şablon re-render çöker. Satır mini-formlarında korunacak flag'ler hidden input ile taşınır.
+- Ürün/varyant/koleksiyon SİLİNMEZ (FK'ler cascadesiz) — yalnız aktiflik toggle. Görsel/eğitim/yorum hard delete edilebilir.
+- Slug düzenlemek canlı URL'i ve sitemap'i değiştirir (eski URL'den redirect YOK) — formlarda uyarı var.
+
 ## Süreklilik
 
 Faz durumu `thoughts/ledgers/CONTINUITY_CLAUDE-microline-site.md` dosyasında checkbox'larla izlenir. Faz bitince checkbox'ı hemen güncelle.

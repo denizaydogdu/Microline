@@ -15,4 +15,12 @@ public interface CollectionRepository extends JpaRepository<Collection, Long> {
     Optional<Collection> findBySlugEn(String slugEn);
 
     List<Collection> findByActiveTrueOrderBySortOrder();
+
+    /* --- Admin tarafı --- */
+
+    List<Collection> findAllByOrderBySortOrderAscIdAsc();
+
+    boolean existsBySlugTrAndIdNot(String slugTr, Long id);
+
+    boolean existsBySlugEnAndIdNot(String slugEn, Long id);
 }

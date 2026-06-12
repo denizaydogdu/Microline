@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="#{admin.products.title} + ' — ' + #{admin.title}">Ürünler — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title" th:text="#{admin.products.title}">Ürünler</h1>
+        <a class="btn btn-primary" th:href="@{/admin/urunler/yeni}" th:text="#{admin.products.new}">Yeni Ürün</a>
+    </div>
+
+    <div class="form-banner form-banner-success" role="status" th:if="${flashSuccess}"
+         th:text="#{${flashSuccess}}">Kaydedildi.</div>
+
+    <p class="admin-empty" th:if="${#lists.isEmpty(products)}"
+       th:text="#{admin.products.empty}">Henüz ürün yok.</p>
+
+    <table class="admin-table" th:unless="${#lists.isEmpty(products)}">
+        <thead>
+        <tr>
+            <th th:text="#{admin.products.col.product}">Ürün</th>
+            <th th:text="#{admin.products.col.sku}">SKU</th>
+            <th th:text="#{admin.products.col.collection}">Koleksiyon</th>
+            <th th:text="#{admin.products.col.price}">Fiyat</th>
+            <th th:text="#{admin.col.status}">Durum</th>
+            <th th:text="#{admin.col.actions}">İşlemler</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${products}">
+            <td><a th:href="@{'/admin/urunler/' + ${p.id}}" th:text="${p.nameTr}">Microline Kesim Makinesi</a></td>
+            <td th:text="${p.sku}">ML-C1</td>
+            <td th:text="${p.collection.nameTr}">Kesim Araçları</td>
+            <td th:text="${@prices.format(p.priceAmount, #locale)}">4.990 ₺</td>
+            <td>
+                <span class="status-badge" th:classappend="${p.active} ? 'status-active' : 'status-passive'"
+                      th:text="${p.active} ? #{admin.status.active} : #{admin.status.passive}">Aktif</span>
+                <span class="status-badge status-featured" th:if="${p.featured}"
+                      th:text="#{admin.status.featured}">Öne çıkan</span>
+            </td>
+            <td class="admin-table-actions">
+                <a class="btn btn-ghost btn-sm" th:href="@{'/admin/urunler/' + ${p.id}}"
+                   th:text="#{admin.action.edit}">Düzenle</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

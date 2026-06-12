@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="#{admin.messages.detailTitle(${msg.id})} + ' — ' + #{admin.title}">Mesaj — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title" th:text="#{admin.messages.detailTitle(${msg.id})}">Mesaj #1</h1>
+        <a class="btn btn-ghost" th:href="@{/admin/mesajlar}"
+           th:text="#{admin.action.back}">Geri</a>
+    </div>
+
+    <div class="form-banner form-banner-success" role="status" th:if="${flashSuccess}"
+         th:text="#{${flashSuccess}}">Kaydedildi.</div>
+    <div class="form-banner form-banner-error" role="alert" th:if="${flashError}"
+         th:text="#{${flashError}}">Hata.</div>
+
+    <div class="admin-detail-grid">
+        <div class="admin-detail-main">
+            <section class="admin-detail-block">
+                <h2 th:text="${msg.subject}">Konu</h2>
+                <p class="admin-pre" th:text="${msg.message}">Mesaj gövdesi.</p>
+            </section>
+        </div>
+
+        <aside class="admin-detail-side">
+            <section class="admin-detail-block">
+                <h2 th:text="#{admin.messages.contact.heading}">Gönderen</h2>
+                <dl class="admin-detail-meta">
+                    <div>
+                        <dt th:text="#{admin.col.name}">Ad Soyad</dt>
+                        <dd th:text="${msg.name}">Ad Soyad</dd>
+                    </div>
+                    <div>
+                        <dt th:text="#{admin.col.email}">E-posta</dt>
+                        <dd><a th:href="'mailto:' + ${msg.email}" th:text="${msg.email}">ornek@ornek.com</a></dd>
+                    </div>
+                    <div>
+                        <dt th:text="#{admin.messages.d.locale}">Dil</dt>
+                        <dd th:text="${msg.locale}">tr</dd>
+                    </div>
+                    <div>
+                        <dt th:text="#{admin.messages.d.kvkk}">KVKK onayı</dt>
+                        <dd th:text="${msg.kvkkConsent} ? #{common.yes} : #{common.no}">Evet</dd>
+                    </div>
+                    <div>
+                        <dt th:text="#{admin.col.date}">Tarih</dt>
+                        <dd th:text="${createdAtText}">01.01.2026 12:00</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <section class="admin-detail-block">
+                <h2 th:text="#{admin.messages.status.heading}">Durum</h2>
+                <p><span class="status-badge" th:classappend="'status-' + ${statusKey}"
+                         th:text="#{'admin.status.' + ${statusKey}}">Yeni</span></p>
+                <div class="admin-status-actions">
+                    <form method="post" th:each="action : ${statusActions}"
+                          th:action="@{'/admin/mesajlar/' + ${msg.id} + '/durum'}">
+                        <input type="hidden" name="status" th:value="${action.value}">
+                        <button class="btn btn-ghost btn-sm" type="submit"
+                                th:text="#{${action.labelKey}}">İletişime Geçildi Olarak İşaretle</button>
+                    </form>
+                </div>
+            </section>
+        </aside>
+    </div>
+</div>
+</body>
+</html>

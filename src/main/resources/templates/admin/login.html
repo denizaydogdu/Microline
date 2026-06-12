@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<!--/* Dekoratörsüz tek başına sayfa: giriş öncesi sidebar/topbar gösterilmez */-->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title th:text="#{admin.login.title}">Yönetim Girişi</title>
+    <link rel="icon" type="image/png" th:href="@{/img/brand/favicon.png}">
+    <link rel="stylesheet" th:href="@{/css/tokens.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body class="admin-login-body">
+<main class="admin-login-wrap">
+    <div class="admin-login-card">
+        <p class="admin-login-brand">
+            <span class="admin-brand-name" th:text="#{site.name}">Microline</span>
+            <span class="admin-brand-badge" th:text="#{admin.badge}">Yönetim</span>
+        </p>
+        <h1 class="admin-login-heading" th:text="#{admin.login.heading}">Yönetim Paneli</h1>
+        <p class="admin-login-intro" th:text="#{admin.login.intro}">Devam etmek için giriş yapın.</p>
+
+        <!--/* ?error / ?logout query parametreleri Spring Security failureUrl /
+               logoutSuccessUrl'den gelir */-->
+        <div class="form-banner form-banner-error" role="alert" th:if="${param.error}">
+            <p th:text="#{admin.login.error}">Kullanıcı adı veya şifre hatalı.</p>
+        </div>
+        <div class="form-banner form-banner-success" role="status" th:if="${param.logout}">
+            <p th:text="#{admin.login.loggedOut}">Oturumunuz kapatıldı.</p>
+        </div>
+
+        <form class="form admin-login-form" method="post" th:action="@{/admin/giris}">
+            <div class="form-field">
+                <label for="username" th:text="#{admin.login.username}">Kullanıcı adı</label>
+                <input type="text" id="username" name="username" required autofocus
+                       autocomplete="username" maxlength="50">
+            </div>
+            <div class="form-field">
+                <label for="password" th:text="#{admin.login.password}">Şifre</label>
+                <input type="password" id="password" name="password" required
+                       autocomplete="current-password">
+            </div>
+            <button class="btn btn-primary" type="submit" th:text="#{admin.login.submit}">Giriş Yap</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

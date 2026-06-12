@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="#{admin.messages.title} + ' — ' + #{admin.title}">Mesajlar — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title" th:text="#{admin.messages.title}">Mesajlar</h1>
+    </div>
+
+    <div class="form-banner form-banner-success" role="status" th:if="${flashSuccess}"
+         th:text="#{${flashSuccess}}">Kaydedildi.</div>
+
+    <div th:replace="~{admin/fragments/inbox :: pills}"></div>
+
+    <p class="admin-empty" th:if="${#lists.isEmpty(rows)}"
+       th:text="#{admin.messages.empty}">Bu filtreyle eşleşen mesaj yok.</p>
+
+    <table class="admin-table" th:unless="${#lists.isEmpty(rows)}">
+        <thead>
+        <tr>
+            <th th:text="#{admin.col.date}">Tarih</th>
+            <th th:text="#{admin.col.name}">Ad Soyad</th>
+            <th th:text="#{admin.col.email}">E-posta</th>
+            <th th:text="#{admin.messages.col.subject}">Konu</th>
+            <th th:text="#{admin.col.status}">Durum</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="row : ${rows}">
+            <td th:text="${row.createdAt}">01.01.2026 12:00</td>
+            <td th:text="${row.name}">Ad Soyad</td>
+            <td th:text="${row.email}">ornek@ornek.com</td>
+            <td><a th:href="@{'/admin/mesajlar/' + ${row.id}}"
+                   th:text="${row.subject}">Konu</a></td>
+            <td><span class="status-badge" th:classappend="'status-' + ${row.statusKey}"
+                      th:text="#{'admin.status.' + ${row.statusKey}}">Yeni</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav th:replace="~{admin/fragments/inbox :: pagination}"></nav>
+</div>
+</body>
+</html>

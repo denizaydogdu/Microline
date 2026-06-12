@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="#{admin.tutorials.title} + ' — ' + #{admin.title}">Eğitimler — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title" th:text="#{admin.tutorials.title}">Eğitimler</h1>
+        <a class="btn btn-primary" th:href="@{/admin/egitimler/yeni}" th:text="#{admin.tutorials.new}">Yeni Eğitim</a>
+    </div>
+
+    <div class="form-banner form-banner-success" role="status" th:if="${flashSuccess}"
+         th:text="#{${flashSuccess}}">Kaydedildi.</div>
+
+    <p class="admin-empty" th:if="${#lists.isEmpty(tutorials)}"
+       th:text="#{admin.tutorials.empty}">Henüz eğitim içeriği yok.</p>
+
+    <table class="admin-table" th:unless="${#lists.isEmpty(tutorials)}">
+        <thead>
+        <tr>
+            <th th:text="#{admin.tutorials.col.title}">Eğitim</th>
+            <th th:text="#{admin.tutorials.col.difficulty}">Zorluk</th>
+            <th th:text="#{admin.col.status}">Durum</th>
+            <th th:text="#{admin.tutorials.col.published}">Yayın tarihi</th>
+            <th th:text="#{admin.col.actions}">İşlemler</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="t : ${tutorials}">
+            <td><a th:href="@{'/admin/egitimler/' + ${t.id}}" th:text="${t.titleTr}">İlk Kesiminiz</a></td>
+            <td>
+                <span class="difficulty-badge"
+                      th:classappend="'difficulty-' + ${t.difficulty.cssSuffix()}"
+                      th:text="${#messages.msg('difficulty.' + t.difficulty.name())}">Başlangıç</span>
+            </td>
+            <td>
+                <span class="status-badge" th:classappend="${t.published} ? 'status-published' : 'status-draft'"
+                      th:text="${t.published} ? #{admin.status.published} : #{admin.status.draft}">Yayında</span>
+            </td>
+            <td th:text="${t.dateText != null ? t.dateText : '—'}">01.06.2026</td>
+            <td class="admin-table-actions">
+                <a class="btn btn-ghost btn-sm" th:href="@{'/admin/egitimler/' + ${t.id}}"
+                   th:text="#{admin.action.edit}">Düzenle</a>
+                <form method="post" th:action="@{'/admin/egitimler/' + ${t.id} + '/durum'}">
+                    <button class="btn btn-ghost btn-sm" type="submit"
+                            th:text="${t.published} ? #{admin.tutorials.action.unpublish} : #{admin.tutorials.action.publish}">Yayından Kaldır</button>
+                </form>
+                <form method="post" th:action="@{'/admin/egitimler/' + ${t.id} + '/sil'}" data-confirm>
+                    <button class="btn btn-ghost btn-sm admin-btn-danger" type="submit"
+                            th:text="#{admin.action.delete}">Sil</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -13,3 +13,7 @@ spring:
 
 microline:
   base-url: https://www.microline.com.tr
+  # Yüklenen görseller deploy artefaktının DIŞINDA yaşar: bu dizin yedekleme
+  # planına dahil edilmeli. nginx isterse /uploads/'ı bu dizinden doğrudan
+  # sunabilir (uygulamaya hiç uğramadan).
+  uploads-dir: /var/microline/uploads

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="#{admin.legal.editTitle} + ' — ' + #{admin.title}">Yasal Sayfayı Düzenle — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title" th:text="#{admin.legal.editTitle} + ': ' + ${legalPage.titleTr}">Yasal Sayfayı Düzenle</h1>
+        <a class="btn btn-ghost btn-sm" th:href="@{/admin/yasal-sayfalar}" th:text="#{admin.action.back}">Geri</a>
+    </div>
+
+    <div class="form-banner form-banner-success" role="status" th:if="${flashSuccess}"
+         th:text="#{${flashSuccess}}">Kaydedildi.</div>
+
+    <div class="admin-form-card admin-form-card-wide">
+        <form class="form" method="post"
+              th:action="@{'/admin/yasal-sayfalar/' + ${legalPage.id}}" th:object="${legalPageForm}">
+
+            <!--/* code/slug salt-okunur: 9 sabit sayfanın URL'leri panelden değişmez */-->
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.legal.section.identity}">Sayfa kimliği</legend>
+                <div class="form-field">
+                    <span class="form-hint" th:text="#{admin.legal.f.code} + ': ' + ${legalPage.code}">Sayfa kodu: KVKK</span>
+                </div>
+                <div class="form-field">
+                    <span class="form-hint" th:text="#{admin.f.slug} + ' (TR): /tr/' + ${legalPage.slugTr}">Slug (TR): /tr/kvkk-aydinlatma-metni</span>
+                </div>
+                <div class="form-field" th:if="${legalPage.slugEn != null}">
+                    <span class="form-hint" th:text="#{admin.f.slug} + ' (EN): /en/' + ${legalPage.slugEn}">Slug (EN): /en/kvkk-privacy-notice</span>
+                </div>
+            </fieldset>
+
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.form.section.tr}">Türkçe içerik</legend>
+                <div class="form-field">
+                    <label for="lf-title-tr" th:text="#{admin.legal.f.titleTr}">Başlık (TR)</label>
+                    <input type="text" id="lf-title-tr" th:field="*{titleTr}" required maxlength="200"
+                           th:classappend="${#fields.hasErrors('titleTr')} ? 'field-error-input'">
+                    <p class="field-error" th:if="${#fields.hasErrors('titleTr')}" th:errors="*{titleTr}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="lf-body-tr" th:text="#{admin.legal.f.bodyTr}">Gövde (TR, HTML)</label>
+                    <textarea id="lf-body-tr" class="admin-html-input" th:field="*{bodyTr}" rows="20" required
+                              th:classappend="${#fields.hasErrors('bodyTr')} ? 'field-error-input'"></textarea>
+                    <p class="form-hint" th:text="#{admin.f.html.hint}">HTML kullanabilirsiniz.</p>
+                    <p class="form-hint admin-slug-warning" th:text="#{admin.legal.body.note}">İçerik vitrinde olduğu gibi yayınlanır.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('bodyTr')}" th:errors="*{bodyTr}">Hata</p>
+                </div>
+            </fieldset>
+
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.form.section.en}">English content (opsiyonel)</legend>
+                <div class="form-field">
+                    <label for="lf-title-en" th:text="#{admin.legal.f.titleEn}">Title (EN)</label>
+                    <input type="text" id="lf-title-en" th:field="*{titleEn}" maxlength="200"
+                           th:classappend="${#fields.hasErrors('titleEn')} ? 'field-error-input'">
+                    <p class="field-error" th:if="${#fields.hasErrors('titleEn')}" th:errors="*{titleEn}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="lf-body-en" th:text="#{admin.legal.f.bodyEn}">Body (EN, HTML)</label>
+                    <textarea id="lf-body-en" class="admin-html-input" th:field="*{bodyEn}" rows="20"
+                              th:classappend="${#fields.hasErrors('bodyEn')} ? 'field-error-input'"></textarea>
+                    <p class="form-hint" th:text="#{admin.f.html.hint}">HTML kullanabilirsiniz.</p>
+                    <p class="form-hint admin-slug-warning" th:text="#{admin.legal.body.note}">İçerik vitrinde olduğu gibi yayınlanır.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('bodyEn')}" th:errors="*{bodyEn}">Hata</p>
+                </div>
+            </fieldset>
+
+            <button class="btn btn-primary" type="submit" th:text="#{admin.action.save}">Kaydet</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="#{admin.subscribers.title} + ' — ' + #{admin.title}">Aboneler — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title" th:text="#{admin.subscribers.title}">Aboneler</h1>
+        <!--/* CSV tüm kayıtları içerir (çıkmışlar dahil — KVKK rıza kaydı) */-->
+        <a class="btn btn-primary" th:href="@{/admin/aboneler/disa-aktar}"
+           th:text="#{admin.subscribers.export}">CSV indir</a>
+    </div>
+
+    <p class="admin-toolbar-note" th:text="#{admin.subscribers.count(${subscriberTotal})}">Toplam 12 kayıt</p>
+
+    <p class="admin-empty" th:if="${#lists.isEmpty(rows)}"
+       th:text="#{admin.subscribers.empty}">Henüz bülten abonesi yok.</p>
+
+    <table class="admin-table" th:unless="${#lists.isEmpty(rows)}">
+        <thead>
+        <tr>
+            <th th:text="#{admin.col.email}">E-posta</th>
+            <th th:text="#{admin.subscribers.col.locale}">Dil</th>
+            <th th:text="#{admin.subscribers.col.kvkkDate}">KVKK onay tarihi</th>
+            <th th:text="#{admin.col.status}">Durum</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="row : ${rows}">
+            <td th:text="${row.email}">ornek@ornek.com</td>
+            <td th:text="${row.locale}">tr</td>
+            <td th:text="${row.kvkkConsentAt}">01.01.2026 12:00</td>
+            <td>
+                <span class="status-badge" th:classappend="${row.active} ? 'status-active' : 'status-passive'"
+                      th:text="${row.active} ? #{admin.subscribers.status.active} : #{admin.subscribers.status.unsubscribed}">Aktif</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav th:replace="~{admin/fragments/inbox :: pagination}"></nav>
+</div>
+</body>
+</html>

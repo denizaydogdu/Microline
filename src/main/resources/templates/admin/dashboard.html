@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="#{admin.dashboard.title} + ' — ' + #{admin.title}">Genel Bakış — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="admin-page-title" th:text="#{admin.dashboard.title}">Genel Bakış</h1>
+
+    <div class="admin-stats">
+        <a class="admin-stat-card" th:href="@{/admin/siparis-talepleri(durum='NEW')}"
+           th:classappend="${newRequestCount > 0} ? 'is-alert'">
+            <span class="admin-stat-value" th:text="${newRequestCount}">0</span>
+            <span class="admin-stat-label" th:text="#{admin.dashboard.stat.newRequests}">Yeni sipariş talebi</span>
+        </a>
+        <a class="admin-stat-card" th:href="@{/admin/mesajlar(durum='NEW')}"
+           th:classappend="${newMessageCount > 0} ? 'is-alert'">
+            <span class="admin-stat-value" th:text="${newMessageCount}">0</span>
+            <span class="admin-stat-label" th:text="#{admin.dashboard.stat.newMessages}">Yeni mesaj</span>
+        </a>
+        <a class="admin-stat-card" th:href="@{/admin/urunler}">
+            <span class="admin-stat-value" th:text="${productCount}">0</span>
+            <span class="admin-stat-label" th:text="#{admin.dashboard.stat.products}">Ürün</span>
+        </a>
+        <a class="admin-stat-card" th:href="@{/admin/aboneler}">
+            <span class="admin-stat-value" th:text="${subscriberCount}">0</span>
+            <span class="admin-stat-label" th:text="#{admin.dashboard.stat.subscribers}">Aktif abone</span>
+        </a>
+    </div>
+
+    <section class="admin-section">
+        <div class="admin-section-head">
+            <h2 th:text="#{admin.dashboard.recent.heading}">Son sipariş talepleri</h2>
+            <a class="admin-section-link" th:href="@{/admin/siparis-talepleri}"
+               th:text="#{admin.dashboard.recent.viewAll}">Tümünü gör</a>
+        </div>
+
+        <p class="admin-empty" th:if="${#lists.isEmpty(recentRequests)}"
+           th:text="#{admin.dashboard.recent.empty}">Henüz sipariş talebi yok.</p>
+
+        <table class="admin-table" th:unless="${#lists.isEmpty(recentRequests)}">
+            <thead>
+            <tr>
+                <th th:text="#{admin.col.date}">Tarih</th>
+                <th th:text="#{admin.col.name}">Ad Soyad</th>
+                <th th:text="#{admin.col.email}">E-posta</th>
+                <th th:text="#{admin.col.status}">Durum</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row : ${recentRequests}">
+                <td th:text="${row.createdAt}">01.01.2026 12:00</td>
+                <td><a th:href="@{'/admin/siparis-talepleri/' + ${row.id}}"
+                       th:text="${row.fullName}">Ad Soyad</a></td>
+                <td th:text="${row.email}">ornek@ornek.com</td>
+                <td><span class="status-badge" th:classappend="'status-' + ${row.statusKey}"
+                          th:text="#{'admin.status.' + ${row.statusKey}}">Yeni</span></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+</body>
+</html>

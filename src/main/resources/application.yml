@@ -18,6 +18,12 @@ spring:
     fallback-to-system-locale: false
   thymeleaf:
     cache: true
+  servlet:
+    multipart:
+      # ImageStorageService 5MB'ı ayrıca doğrular; request limiti çoklu
+      # alan + CSRF token payı için daha geniş tutulur.
+      max-file-size: 5MB
+      max-request-size: 12MB
 
 server:
   port: 8080
@@ -34,3 +40,12 @@ management:
 
 microline:
   base-url: https://www.microline.com.tr
+  # Dev varsayılanı: proje kökünde ./uploads (gitignore'lu). Prod profili
+  # /var/microline/uploads kullanır, test profili target/test-uploads.
+  uploads-dir: ./uploads
+  admin:
+    # Yalnızca İLK açılışta admin_users tablosu boşken kullanılır.
+    # Şifreyi yml'e YAZMAYIN — MICROLINE_ADMIN_INITIAL_PASSWORD env değişkeniyle
+    # verin; boş bırakılırsa rastgele üretilir ve açılışta WARN loglanır.
+    initial-username: admin
+    initial-password: ""

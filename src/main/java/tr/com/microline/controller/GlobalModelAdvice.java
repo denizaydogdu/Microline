@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,8 +27,13 @@ import tr.com.microline.service.CollectionService;
  * bunun yerine açık "alternateUrl" koyar — header fragment'ı önce onu arar.
  * Mega-menü koleksiyonları da burada eklenir; header her sayfada (hata
  * sayfaları dahil) render edildiği için advice seviyesinde olmak zorunda.
+ *
+ * Kapsam BİLEREK daraltılmıştır: yalnız public controller paketi + Boot'un
+ * ErrorController'ı (hata şablonları header'ı navCollections/routes ile
+ * render eder). Admin controller'ları (tr.com.microline.admin.*) hariçtir —
+ * onlara AdminModelAdvice bakar.
  */
-@ControllerAdvice
+@ControllerAdvice(basePackageClasses = HomeController.class, assignableTypes = ErrorController.class)
 public class GlobalModelAdvice {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalModelAdvice.class);

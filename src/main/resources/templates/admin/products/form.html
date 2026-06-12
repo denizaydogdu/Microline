@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="(${product != null} ? #{admin.products.editTitle} : #{admin.products.newTitle}) + ' — ' + #{admin.title}">Ürün — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title"
+            th:text="${product != null} ? #{admin.products.editTitle} + ': ' + ${product.nameTr} : #{admin.products.newTitle}">Yeni Ürün</h1>
+        <a class="btn btn-ghost btn-sm" th:href="@{/admin/urunler}" th:text="#{admin.action.back}">Geri</a>
+    </div>
+
+    <div class="form-banner form-banner-success" role="status" th:if="${flashSuccess}"
+         th:text="#{${flashSuccess}}">Kaydedildi.</div>
+    <!--/* Satır mini-formlarının (varyant/görsel meta) PRG hataları buraya düşer */-->
+    <div class="form-banner form-banner-error" role="alert" th:if="${flashError}"
+         th:text="#{${flashError}}">Hata.</div>
+
+    <div class="admin-form-card admin-form-card-wide">
+        <form class="form" method="post"
+              th:action="${product != null} ? @{'/admin/urunler/' + ${product.id}} : @{/admin/urunler/yeni}"
+              th:object="${productForm}">
+
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.form.section.tr}">Türkçe içerik</legend>
+                <div class="form-field">
+                    <label for="pf-name-tr" th:text="#{admin.products.f.nameTr}">Ürün adı (TR)</label>
+                    <input type="text" id="pf-name-tr" th:field="*{nameTr}" required maxlength="200"
+                           th:classappend="${#fields.hasErrors('nameTr')} ? 'field-error-input'">
+                    <p class="field-error" th:if="${#fields.hasErrors('nameTr')}" th:errors="*{nameTr}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="pf-slug-tr" th:text="#{admin.f.slug} + ' (TR)'">Slug (TR)</label>
+                    <input type="text" id="pf-slug-tr" th:field="*{slugTr}" maxlength="200"
+                           th:classappend="${#fields.hasErrors('slugTr')} ? 'field-error-input'">
+                    <p class="form-hint" th:text="#{admin.f.slug.hint}">Boş bırakılırsa addan üretilir.</p>
+                    <p class="form-hint admin-slug-warning" th:if="${product != null}"
+                       th:text="#{admin.f.slug.warning}">Slug değişimi eski URL'i kırar.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('slugTr')}" th:errors="*{slugTr}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="pf-tagline-tr" th:text="#{admin.products.f.taglineTr}">Slogan (TR)</label>
+                    <input type="text" id="pf-tagline-tr" th:field="*{taglineTr}" required
+                           th:classappend="${#fields.hasErrors('taglineTr')} ? 'field-error-input'">
+                    <p class="field-error" th:if="${#fields.hasErrors('taglineTr')}" th:errors="*{taglineTr}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="pf-desc-tr" th:text="#{admin.products.f.descriptionTr}">Açıklama (TR, HTML)</label>
+                    <textarea id="pf-desc-tr" class="admin-html-input" th:field="*{descriptionTr}" rows="10" required
+                              th:classappend="${#fields.hasErrors('descriptionTr')} ? 'field-error-input'"></textarea>
+                    <p class="form-hint" th:text="#{admin.f.html.hint}">HTML kullanabilirsiniz.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('descriptionTr')}" th:errors="*{descriptionTr}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="pf-safety-tr" th:text="#{admin.products.f.safetyTr}">Güvenlik notları (TR, HTML)</label>
+                    <textarea id="pf-safety-tr" class="admin-html-input" th:field="*{safetyNotesTr}" rows="5"
+                              th:classappend="${#fields.hasErrors('safetyNotesTr')} ? 'field-error-input'"></textarea>
+                    <p class="form-hint" th:text="#{admin.f.html.hint}">HTML kullanabilirsiniz.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('safetyNotesTr')}" th:errors="*{safetyNotesTr}">Hata</p>
+                </div>
+            </fieldset>
+
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.form.section.en}">English content (opsiyonel)</legend>
+                <div class="form-field">
+                    <label for="pf-name-en" th:text="#{admin.products.f.nameEn}">Product name (EN)</label>
+                    <input type="text" id="pf-name-en" th:field="*{nameEn}" maxlength="200"
+                           th:classappend="${#fields.hasErrors('nameEn')} ? 'field-error-input'">
+                    <p class="field-error" th:if="${#fields.hasErrors('nameEn')}" th:errors="*{nameEn}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="pf-slug-en" th:text="#{admin.f.slug} + ' (EN)'">Slug (EN)</label>
+                    <input type="text" id="pf-slug-en" th:field="*{slugEn}" maxlength="200"
+                           th:classappend="${#fields.hasErrors('slugEn')} ? 'field-error-input'">
+                    <p class="form-hint" th:text="#{admin.f.slug.hint}">Boş bırakılırsa addan üretilir.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('slugEn')}" th:errors="*{slugEn}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="pf-tagline-en" th:text="#{admin.products.f.taglineEn}">Tagline (EN)</label>
+                    <input type="text" id="pf-tagline-en" th:field="*{taglineEn}"
+                           th:classappend="${#fields.hasErrors('taglineEn')} ? 'field-error-input'">
+                    <p class="field-error" th:if="${#fields.hasErrors('taglineEn')}" th:errors="*{taglineEn}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="pf-desc-en" th:text="#{admin.products.f.descriptionEn}">Description (EN, HTML)</label>
+                    <textarea id="pf-desc-en" class="admin-html-input" th:field="*{descriptionEn}" rows="10"
+                              th:classappend="${#fields.hasErrors('descriptionEn')} ? 'field-error-input'"></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('descriptionEn')}" th:errors="*{descriptionEn}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="pf-safety-en" th:text="#{admin.products.f.safetyEn}">Safety notes (EN, HTML)</label>
+                    <textarea id="pf-safety-en" class="admin-html-input" th:field="*{safetyNotesEn}" rows="5"
+                              th:classappend="${#fields.hasErrors('safetyNotesEn')} ? 'field-error-input'"></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('safetyNotesEn')}" th:errors="*{safetyNotesEn}">Hata</p>
+                </div>
+            </fieldset>
+
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.form.section.commerce}">Fiyat ve katalog</legend>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="pf-sku" th:text="#{admin.products.f.sku}">SKU</label>
+                        <input type="text" id="pf-sku" th:field="*{sku}" required maxlength="40"
+                               th:classappend="${#fields.hasErrors('sku')} ? 'field-error-input'">
+                        <p class="field-error" th:if="${#fields.hasErrors('sku')}" th:errors="*{sku}">Hata</p>
+                    </div>
+                    <div class="form-field">
+                        <label for="pf-collection" th:text="#{admin.products.f.collection}">Koleksiyon</label>
+                        <select id="pf-collection" th:field="*{collectionId}" required
+                                th:classappend="${#fields.hasErrors('collectionId')} ? 'field-error-input'">
+                            <option th:each="c : ${collections}" th:value="${c.id}"
+                                    th:text="${c.nameTr}">Kesim Araçları</option>
+                        </select>
+                        <p class="field-error" th:if="${#fields.hasErrors('collectionId')}" th:errors="*{collectionId}">Hata</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="pf-price" th:text="#{admin.products.f.price}">Fiyat (TL)</label>
+                        <input type="number" id="pf-price" th:field="*{priceAmount}" min="0.01" step="0.01" required
+                               th:classappend="${#fields.hasErrors('priceAmount')} ? 'field-error-input'">
+                        <p class="field-error" th:if="${#fields.hasErrors('priceAmount')}" th:errors="*{priceAmount}">Hata</p>
+                    </div>
+                    <div class="form-field">
+                        <label for="pf-compare" th:text="#{admin.products.f.compareAt}">Üstü çizili fiyat</label>
+                        <input type="number" id="pf-compare" th:field="*{compareAtPrice}" min="0.01" step="0.01"
+                               th:classappend="${#fields.hasErrors('compareAtPrice')} ? 'field-error-input'">
+                        <p class="field-error" th:if="${#fields.hasErrors('compareAtPrice')}" th:errors="*{compareAtPrice}">Hata</p>
+                    </div>
+                    <div class="form-field form-field-narrow">
+                        <label for="pf-sort" th:text="#{admin.f.sortOrder}">Sıra</label>
+                        <input type="number" id="pf-sort" th:field="*{sortOrder}" min="0" step="1" required
+                               th:classappend="${#fields.hasErrors('sortOrder')} ? 'field-error-input'">
+                        <p class="field-error" th:if="${#fields.hasErrors('sortOrder')}" th:errors="*{sortOrder}">Hata</p>
+                    </div>
+                </div>
+                <div class="form-field admin-check-field">
+                    <label>
+                        <input type="checkbox" th:field="*{active}">
+                        <span th:text="#{admin.f.active}">Aktif (sitede görünür)</span>
+                    </label>
+                </div>
+                <div class="form-field admin-check-field">
+                    <label>
+                        <input type="checkbox" th:field="*{featured}">
+                        <span th:text="#{admin.f.featured}">Öne çıkan</span>
+                    </label>
+                </div>
+                <div class="form-field">
+                    <label for="pf-specs" th:text="#{admin.products.f.specs}">Teknik özellikler (JSON)</label>
+                    <textarea id="pf-specs" class="admin-html-input" th:field="*{specsJson}" rows="6"
+                              th:classappend="${#fields.hasErrors('specsJson')} ? 'field-error-input'"></textarea>
+                    <p class="form-hint" th:text="#{admin.f.specs.hint}">JSON nesnesi girin.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('specsJson')}" th:errors="*{specsJson}">Hata</p>
+                </div>
+            </fieldset>
+
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.form.section.seo}">SEO</legend>
+                <div class="form-field">
+                    <label for="pf-meta-tr" th:text="#{admin.products.f.metaTr}">Meta açıklama (TR)</label>
+                    <textarea id="pf-meta-tr" th:field="*{metaDescriptionTr}" rows="2" required maxlength="300"
+                              th:classappend="${#fields.hasErrors('metaDescriptionTr')} ? 'field-error-input'"></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('metaDescriptionTr')}" th:errors="*{metaDescriptionTr}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="pf-meta-en" th:text="#{admin.products.f.metaEn}">Meta description (EN)</label>
+                    <textarea id="pf-meta-en" th:field="*{metaDescriptionEn}" rows="2" maxlength="300"
+                              th:classappend="${#fields.hasErrors('metaDescriptionEn')} ? 'field-error-input'"></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('metaDescriptionEn')}" th:errors="*{metaDescriptionEn}">Hata</p>
+                </div>
+            </fieldset>
+
+            <button class="btn btn-primary" type="submit" th:text="#{admin.action.save}">Kaydet</button>
+        </form>
+    </div>
+
+    <!--/* ── Varyantlar (yalnız düzenlemede: önce ürün, sonra varyant) ── */-->
+    <section class="admin-subsection" th:if="${product != null}">
+        <h2 th:text="#{admin.products.variants.heading}">Varyantlar</h2>
+
+        <p class="admin-empty" th:if="${#lists.isEmpty(variants)}"
+           th:text="#{admin.products.variants.empty}">Bu ürünün varyantı yok.</p>
+
+        <!--/* Satır başına bağımsız mini-form (cart-line kalıbı); active hidden
+               taşınır — yoksa her satır kaydı varyantı pasifleştirirdi */-->
+        <ul class="admin-row-list" th:unless="${#lists.isEmpty(variants)}">
+            <li class="admin-row" th:each="v, st : ${variants}">
+                <form class="admin-row-form" method="post"
+                      th:action="@{'/admin/urunler/' + ${product.id} + '/varyantlar/' + ${v.id}}">
+                    <input type="hidden" name="active" th:value="${v.active}">
+                    <div class="form-field">
+                        <label th:for="'vr-sku-' + ${st.index}" th:text="#{admin.products.variants.f.sku}">Varyant SKU</label>
+                        <input type="text" th:id="'vr-sku-' + ${st.index}" name="sku" th:value="${v.sku}" required maxlength="40">
+                    </div>
+                    <div class="form-field">
+                        <label th:for="'vr-nametr-' + ${st.index}" th:text="#{admin.products.variants.f.nameTr}">Varyant adı (TR)</label>
+                        <input type="text" th:id="'vr-nametr-' + ${st.index}" name="nameTr" th:value="${v.nameTr}" required maxlength="200">
+                    </div>
+                    <div class="form-field">
+                        <label th:for="'vr-nameen-' + ${st.index}" th:text="#{admin.products.variants.f.nameEn}">Variant name (EN)</label>
+                        <input type="text" th:id="'vr-nameen-' + ${st.index}" name="nameEn" th:value="${v.nameEn}" maxlength="200">
+                    </div>
+                    <div class="form-field form-field-narrow">
+                        <label th:for="'vr-delta-' + ${st.index}" th:text="#{admin.products.variants.f.priceDelta}">Fiyat farkı</label>
+                        <input type="number" th:id="'vr-delta-' + ${st.index}" name="priceDelta" th:value="${v.priceDelta}" step="0.01" required>
+                    </div>
+                    <div class="form-field form-field-narrow">
+                        <label th:for="'vr-sort-' + ${st.index}" th:text="#{admin.f.sortOrder}">Sıra</label>
+                        <input type="number" th:id="'vr-sort-' + ${st.index}" name="sortOrder" th:value="${v.sortOrder}" min="0" step="1" required>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" type="submit" th:text="#{admin.action.save}">Kaydet</button>
+                </form>
+                <div class="admin-row-side">
+                    <span class="status-badge" th:classappend="${v.active} ? 'status-active' : 'status-passive'"
+                          th:text="${v.active} ? #{admin.status.active} : #{admin.status.passive}">Aktif</span>
+                    <form method="post"
+                          th:action="@{'/admin/urunler/' + ${product.id} + '/varyantlar/' + ${v.id} + '/durum'}">
+                        <button class="btn btn-ghost btn-sm" type="submit"
+                                th:text="${v.active} ? #{admin.danger.deactivate} : #{admin.danger.activate}">Pasifleştir</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+
+        <h3 th:text="#{admin.products.variants.add}">Varyant Ekle</h3>
+        <form class="admin-row-form" method="post"
+              th:action="@{'/admin/urunler/' + ${product.id} + '/varyantlar'}" th:object="${variantForm}">
+            <input type="hidden" name="active" value="true">
+            <div class="form-field">
+                <label for="va-sku" th:text="#{admin.products.variants.f.sku}">Varyant SKU</label>
+                <input type="text" id="va-sku" th:field="*{sku}" required maxlength="40"
+                       th:classappend="${#fields.hasErrors('sku')} ? 'field-error-input'">
+                <p class="field-error" th:if="${#fields.hasErrors('sku')}" th:errors="*{sku}">Hata</p>
+            </div>
+            <div class="form-field">
+                <label for="va-name-tr" th:text="#{admin.products.variants.f.nameTr}">Varyant adı (TR)</label>
+                <input type="text" id="va-name-tr" th:field="*{nameTr}" required maxlength="200"
+                       th:classappend="${#fields.hasErrors('nameTr')} ? 'field-error-input'">
+                <p class="field-error" th:if="${#fields.hasErrors('nameTr')}" th:errors="*{nameTr}">Hata</p>
+            </div>
+            <div class="form-field">
+                <label for="va-name-en" th:text="#{admin.products.variants.f.nameEn}">Variant name (EN)</label>
+                <input type="text" id="va-name-en" th:field="*{nameEn}" maxlength="200"
+                       th:classappend="${#fields.hasErrors('nameEn')} ? 'field-error-input'">
+                <p class="field-error" th:if="${#fields.hasErrors('nameEn')}" th:errors="*{nameEn}">Hata</p>
+            </div>
+            <div class="form-field form-field-narrow">
+                <label for="va-delta" th:text="#{admin.products.variants.f.priceDelta}">Fiyat farkı</label>
+                <input type="number" id="va-delta" th:field="*{priceDelta}" step="0.01" required
+                       th:classappend="${#fields.hasErrors('priceDelta')} ? 'field-error-input'">
+                <p class="field-error" th:if="${#fields.hasErrors('priceDelta')}" th:errors="*{priceDelta}">Hata</p>
+            </div>
+            <div class="form-field form-field-narrow">
+                <label for="va-sort" th:text="#{admin.f.sortOrder}">Sıra</label>
+                <input type="number" id="va-sort" th:field="*{sortOrder}" min="0" step="1" required
+                       th:classappend="${#fields.hasErrors('sortOrder')} ? 'field-error-input'">
+                <p class="field-error" th:if="${#fields.hasErrors('sortOrder')}" th:errors="*{sortOrder}">Hata</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" type="submit"
+                    th:text="#{admin.products.variants.add}">Varyant Ekle</button>
+        </form>
+    </section>
+
+    <!--/* ── Görsel yöneticisi (yalnız düzenlemede) ── */-->
+    <section class="admin-subsection" th:if="${product != null}">
+        <h2 th:text="#{admin.products.images.heading}">Görseller</h2>
+
+        <p class="admin-empty" th:if="${#lists.isEmpty(images)}"
+           th:text="#{admin.products.images.empty}">Bu ürünün görseli yok.</p>
+
+        <div class="admin-image-grid" th:unless="${#lists.isEmpty(images)}">
+            <article class="admin-image-card" th:each="img, st : ${images}">
+                <div class="admin-image-thumb">
+                    <img th:src="@{${img.url}}" th:alt="${img.altTr}" loading="lazy">
+                </div>
+                <span class="status-badge status-featured" th:if="${img.url == product.heroImageUrl}"
+                      th:text="#{admin.products.images.isHero}">Kapak görseli</span>
+                <form class="admin-image-meta" method="post"
+                      th:action="@{'/admin/urunler/' + ${product.id} + '/gorseller/' + ${img.id}}">
+                    <div class="form-field">
+                        <label th:for="'im-alttr-' + ${st.index}" th:text="#{admin.f.altTr}">Alternatif metin (TR)</label>
+                        <input type="text" th:id="'im-alttr-' + ${st.index}" name="altTr" th:value="${img.altTr}" required maxlength="300">
+                    </div>
+                    <div class="form-field">
+                        <label th:for="'im-alten-' + ${st.index}" th:text="#{admin.f.altEn}">Alternatif metin (EN)</label>
+                        <input type="text" th:id="'im-alten-' + ${st.index}" name="altEn" th:value="${img.altEn}" maxlength="300">
+                    </div>
+                    <div class="form-field form-field-narrow">
+                        <label th:for="'im-sort-' + ${st.index}" th:text="#{admin.f.sortOrder}">Sıra</label>
+                        <input type="number" th:id="'im-sort-' + ${st.index}" name="sortOrder" th:value="${img.sortOrder}" min="0" step="1" required>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" type="submit" th:text="#{admin.action.save}">Kaydet</button>
+                </form>
+                <div class="admin-image-actions">
+                    <form method="post"
+                          th:action="@{'/admin/urunler/' + ${product.id} + '/gorseller/' + ${img.id} + '/kapak'}"
+                          th:unless="${img.url == product.heroImageUrl}">
+                        <button class="btn btn-ghost btn-sm" type="submit"
+                                th:text="#{admin.products.images.setHero}">Kapak Yap</button>
+                    </form>
+                    <form method="post" data-confirm
+                          th:action="@{'/admin/urunler/' + ${product.id} + '/gorseller/' + ${img.id} + '/sil'}">
+                        <button class="btn btn-ghost btn-sm admin-btn-danger" type="submit"
+                                th:text="#{admin.products.images.delete}">Sil</button>
+                    </form>
+                </div>
+            </article>
+        </div>
+
+        <h3 th:text="#{admin.products.images.upload}">Görsel Yükle</h3>
+        <form class="admin-upload-form" method="post" enctype="multipart/form-data"
+              th:action="@{'/admin/urunler/' + ${product.id} + '/gorseller'}" th:object="${productImageForm}">
+            <div class="form-field">
+                <label for="iu-file" th:text="#{admin.f.file}">Görsel dosyası</label>
+                <input type="file" id="iu-file" name="file" accept="image/jpeg,image/png,image/webp" required
+                       th:classappend="${#fields.hasErrors('file')} ? 'field-error-input'">
+                <p class="field-error" th:if="${#fields.hasErrors('file')}" th:errors="*{file}">Hata</p>
+            </div>
+            <div class="form-field">
+                <label for="iu-alt-tr" th:text="#{admin.f.altTr}">Alternatif metin (TR)</label>
+                <input type="text" id="iu-alt-tr" th:field="*{altTr}" required maxlength="300"
+                       th:classappend="${#fields.hasErrors('altTr')} ? 'field-error-input'">
+                <p class="field-error" th:if="${#fields.hasErrors('altTr')}" th:errors="*{altTr}">Hata</p>
+            </div>
+            <div class="form-field">
+                <label for="iu-alt-en" th:text="#{admin.f.altEn}">Alternatif metin (EN)</label>
+                <input type="text" id="iu-alt-en" th:field="*{altEn}" maxlength="300"
+                       th:classappend="${#fields.hasErrors('altEn')} ? 'field-error-input'">
+                <p class="field-error" th:if="${#fields.hasErrors('altEn')}" th:errors="*{altEn}">Hata</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" type="submit"
+                    th:text="#{admin.products.images.upload}">Görsel Yükle</button>
+        </form>
+    </section>
+
+    <!--/* ── Tehlikeli bölge (yalnız düzenlemede): silme yok, aktiflik toggle ── */-->
+    <section class="admin-subsection admin-danger" th:if="${product != null}">
+        <h2 th:text="#{admin.danger.heading}">Tehlikeli bölge</h2>
+        <p th:text="#{admin.danger.productNote}">Pasif ürün vitrinde görünmez; veri silinmez.</p>
+        <form method="post" th:action="@{'/admin/urunler/' + ${product.id} + '/durum'}" data-confirm>
+            <button class="btn admin-btn-danger" type="submit"
+                    th:text="${product.active} ? #{admin.danger.deactivate} : #{admin.danger.activate}">Pasifleştir</button>
+        </form>
+    </section>
+</div>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="(${tutorial != null} ? #{admin.tutorials.editTitle} : #{admin.tutorials.newTitle}) + ' — ' + #{admin.title}">Eğitim — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title"
+            th:text="${tutorial != null} ? #{admin.tutorials.editTitle} + ': ' + ${tutorial.titleTr} : #{admin.tutorials.newTitle}">Yeni Eğitim</h1>
+        <a class="btn btn-ghost btn-sm" th:href="@{/admin/egitimler}" th:text="#{admin.action.back}">Geri</a>
+    </div>
+
+    <div class="form-banner form-banner-success" role="status" th:if="${flashSuccess}"
+         th:text="#{${flashSuccess}}">Kaydedildi.</div>
+
+    <div class="admin-form-card admin-form-card-wide">
+        <!--/* Kapak dosyası için multipart şart; dosya seçilmezse mevcut görsel korunur */-->
+        <form class="form" method="post" enctype="multipart/form-data"
+              th:action="${tutorial != null} ? @{'/admin/egitimler/' + ${tutorial.id}} : @{/admin/egitimler/yeni}"
+              th:object="${tutorialForm}">
+
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.form.section.tr}">Türkçe içerik</legend>
+                <div class="form-field">
+                    <label for="tf-title-tr" th:text="#{admin.tutorials.f.titleTr}">Başlık (TR)</label>
+                    <input type="text" id="tf-title-tr" th:field="*{titleTr}" required maxlength="200"
+                           th:classappend="${#fields.hasErrors('titleTr')} ? 'field-error-input'">
+                    <p class="field-error" th:if="${#fields.hasErrors('titleTr')}" th:errors="*{titleTr}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="tf-slug-tr" th:text="#{admin.f.slug} + ' (TR)'">Slug (TR)</label>
+                    <input type="text" id="tf-slug-tr" th:field="*{slugTr}" maxlength="200"
+                           th:classappend="${#fields.hasErrors('slugTr')} ? 'field-error-input'">
+                    <p class="form-hint" th:text="#{admin.f.slug.hint}">Boş bırakılırsa addan üretilir.</p>
+                    <p class="form-hint admin-slug-warning" th:if="${tutorial != null}"
+                       th:text="#{admin.f.slug.warning}">Slug değişimi eski URL'i kırar.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('slugTr')}" th:errors="*{slugTr}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="tf-excerpt-tr" th:text="#{admin.tutorials.f.excerptTr}">Özet (TR)</label>
+                    <textarea id="tf-excerpt-tr" th:field="*{excerptTr}" rows="3" required maxlength="500"
+                              th:classappend="${#fields.hasErrors('excerptTr')} ? 'field-error-input'"></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('excerptTr')}" th:errors="*{excerptTr}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="tf-body-tr" th:text="#{admin.tutorials.f.bodyTr}">Gövde (TR, HTML)</label>
+                    <textarea id="tf-body-tr" class="admin-html-input" th:field="*{bodyTr}" rows="14" required
+                              th:classappend="${#fields.hasErrors('bodyTr')} ? 'field-error-input'"></textarea>
+                    <p class="form-hint" th:text="#{admin.f.html.hint}">HTML kullanabilirsiniz.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('bodyTr')}" th:errors="*{bodyTr}">Hata</p>
+                </div>
+            </fieldset>
+
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.form.section.en}">English content (opsiyonel)</legend>
+                <div class="form-field">
+                    <label for="tf-title-en" th:text="#{admin.tutorials.f.titleEn}">Title (EN)</label>
+                    <input type="text" id="tf-title-en" th:field="*{titleEn}" maxlength="200"
+                           th:classappend="${#fields.hasErrors('titleEn')} ? 'field-error-input'">
+                    <p class="field-error" th:if="${#fields.hasErrors('titleEn')}" th:errors="*{titleEn}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="tf-slug-en" th:text="#{admin.f.slug} + ' (EN)'">Slug (EN)</label>
+                    <input type="text" id="tf-slug-en" th:field="*{slugEn}" maxlength="200"
+                           th:classappend="${#fields.hasErrors('slugEn')} ? 'field-error-input'">
+                    <p class="form-hint" th:text="#{admin.f.slug.hint}">Boş bırakılırsa addan üretilir.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('slugEn')}" th:errors="*{slugEn}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="tf-excerpt-en" th:text="#{admin.tutorials.f.excerptEn}">Excerpt (EN)</label>
+                    <textarea id="tf-excerpt-en" th:field="*{excerptEn}" rows="3" maxlength="500"
+                              th:classappend="${#fields.hasErrors('excerptEn')} ? 'field-error-input'"></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('excerptEn')}" th:errors="*{excerptEn}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="tf-body-en" th:text="#{admin.tutorials.f.bodyEn}">Body (EN, HTML)</label>
+                    <textarea id="tf-body-en" class="admin-html-input" th:field="*{bodyEn}" rows="14"
+                              th:classappend="${#fields.hasErrors('bodyEn')} ? 'field-error-input'"></textarea>
+                    <p class="form-hint" th:text="#{admin.f.html.hint}">HTML kullanabilirsiniz.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('bodyEn')}" th:errors="*{bodyEn}">Hata</p>
+                </div>
+            </fieldset>
+
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.tutorials.section.publish}">Yayın ve medya</legend>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="tf-difficulty" th:text="#{admin.tutorials.f.difficulty}">Zorluk seviyesi</label>
+                        <select id="tf-difficulty" th:field="*{difficulty}" required
+                                th:classappend="${#fields.hasErrors('difficulty')} ? 'field-error-input'">
+                            <option th:each="d : ${difficulties}" th:value="${d.name()}"
+                                    th:text="${#messages.msg('difficulty.' + d.name())}">Başlangıç</option>
+                        </select>
+                        <p class="field-error" th:if="${#fields.hasErrors('difficulty')}" th:errors="*{difficulty}">Hata</p>
+                    </div>
+                    <div class="form-field">
+                        <label for="tf-video" th:text="#{admin.tutorials.f.videoUrl}">Video URL</label>
+                        <input type="url" id="tf-video" th:field="*{videoUrl}" maxlength="300"
+                               th:classappend="${#fields.hasErrors('videoUrl')} ? 'field-error-input'">
+                        <p class="field-error" th:if="${#fields.hasErrors('videoUrl')}" th:errors="*{videoUrl}">Hata</p>
+                    </div>
+                </div>
+                <div class="form-field admin-check-field">
+                    <label>
+                        <input type="checkbox" th:field="*{published}">
+                        <span th:text="#{admin.tutorials.f.published}">Yayında (eğitimler sayfasında görünür)</span>
+                    </label>
+                    <p class="form-hint" th:text="#{admin.tutorials.f.published.hint}">İlk yayın tarihi otomatik damgalanır.</p>
+                </div>
+                <div class="form-field">
+                    <label for="tf-cover" th:text="#{admin.tutorials.f.cover}">Kapak görseli</label>
+                    <div class="admin-current-image" th:if="${tutorial != null && tutorial.coverImageUrl != null}">
+                        <img th:src="@{${tutorial.coverImageUrl}}" th:alt="#{admin.tutorials.f.cover.current}"
+                             width="160" loading="lazy">
+                        <span class="form-hint" th:text="#{admin.tutorials.f.cover.current}">Mevcut kapak görseli</span>
+                    </div>
+                    <input type="file" id="tf-cover" name="coverImage" accept="image/jpeg,image/png,image/webp"
+                           th:classappend="${#fields.hasErrors('coverImage')} ? 'field-error-input'">
+                    <p class="form-hint" th:text="#{admin.f.file}">JPEG, PNG veya WebP — en fazla 5MB.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('coverImage')}" th:errors="*{coverImage}">Hata</p>
+                </div>
+            </fieldset>
+
+            <button class="btn btn-primary" type="submit" th:text="#{admin.action.save}">Kaydet</button>
+        </form>
+    </div>
+
+    <!--/* ── Tehlikeli bölge (yalnız düzenlemede): eğitim HARD silinebilir ── */-->
+    <section class="admin-subsection admin-danger" th:if="${tutorial != null}">
+        <h2 th:text="#{admin.danger.heading}">Tehlikeli bölge</h2>
+        <p th:text="#{admin.tutorials.danger.note}">Silme kalıcıdır.</p>
+        <form method="post" th:action="@{'/admin/egitimler/' + ${tutorial.id} + '/durum'}">
+            <button class="btn admin-btn-danger" type="submit"
+                    th:text="${tutorial.published} ? #{admin.tutorials.action.unpublish} : #{admin.tutorials.action.publish}">Yayından Kaldır</button>
+        </form>
+        <form method="post" th:action="@{'/admin/egitimler/' + ${tutorial.id} + '/sil'}" data-confirm>
+            <button class="btn admin-btn-danger" type="submit" th:text="#{admin.action.delete}">Sil</button>
+        </form>
+    </section>
+</div>
+</body>
+</html>

@@ -9,6 +9,13 @@ public interface TutorialPostRepository extends JpaRepository<TutorialPost, Long
 
     List<TutorialPost> findByPublishedTrueOrderByPublishedAtDesc();
 
+    /** Admin listesi taslakları da kapsar; publishedAt null olabildiğinden createdAt'e sıralanır. */
+    List<TutorialPost> findAllByOrderByCreatedAtDescIdDesc();
+
+    boolean existsBySlugTrAndIdNot(String slugTr, Long id);
+
+    boolean existsBySlugEnAndIdNot(String slugEn, Long id);
+
     Optional<TutorialPost> findBySlugTrAndPublishedTrue(String slugTr);
 
     Optional<TutorialPost> findBySlugEnAndPublishedTrue(String slugEn);

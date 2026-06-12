@@ -10,6 +10,9 @@ target/
 *.log
 application-local.yml
 
+# Dev'de admin'in yüklediği görseller (prod: /var/microline/uploads)
+uploads/
+
 # Yerel araçlar (repo'ya girmez)
 .agents/
 .claude/

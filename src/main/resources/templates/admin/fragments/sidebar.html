@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<body>
+<!--/* adminNav model attr'ı aktif linki işaretler; NEW sayaçları AdminModelAdvice'tan.
+       Henüz yazılmamış bölümlerin (Phase C-E) linkleri planlı rotalarına işaret eder. */-->
+<aside id="admin-sidebar" class="admin-sidebar" th:fragment="sidebar">
+    <div class="admin-brand">
+        <a class="admin-brand-link" th:href="@{/admin}">
+            <span class="admin-brand-name" th:text="#{site.name}">Microline</span>
+            <span class="admin-brand-badge" th:text="#{admin.badge}">Yönetim</span>
+        </a>
+    </div>
+    <nav class="admin-nav" th:aria-label="#{admin.nav.label}">
+        <p class="admin-nav-heading" th:text="#{admin.nav.section.panel}">Panel</p>
+        <ul class="admin-nav-list">
+            <li><a class="admin-nav-link" th:href="@{/admin}"
+                   th:classappend="${adminNav == 'dashboard'} ? 'is-active'"
+                   th:text="#{admin.nav.dashboard}">Genel Bakış</a></li>
+        </ul>
+
+        <p class="admin-nav-heading" th:text="#{admin.nav.section.catalog}">Katalog</p>
+        <ul class="admin-nav-list">
+            <li><a class="admin-nav-link" th:href="@{/admin/urunler}"
+                   th:classappend="${adminNav == 'products'} ? 'is-active'"
+                   th:text="#{admin.nav.products}">Ürünler</a></li>
+            <li><a class="admin-nav-link" th:href="@{/admin/koleksiyonlar}"
+                   th:classappend="${adminNav == 'collections'} ? 'is-active'"
+                   th:text="#{admin.nav.collections}">Koleksiyonlar</a></li>
+        </ul>
+
+        <p class="admin-nav-heading" th:text="#{admin.nav.section.content}">İçerik</p>
+        <ul class="admin-nav-list">
+            <li><a class="admin-nav-link" th:href="@{/admin/egitimler}"
+                   th:classappend="${adminNav == 'tutorials'} ? 'is-active'"
+                   th:text="#{admin.nav.tutorials}">Eğitimler</a></li>
+            <li><a class="admin-nav-link" th:href="@{/admin/yorumlar}"
+                   th:classappend="${adminNav == 'reviews'} ? 'is-active'"
+                   th:text="#{admin.nav.reviews}">Yorumlar</a></li>
+            <li><a class="admin-nav-link" th:href="@{/admin/yasal-sayfalar}"
+                   th:classappend="${adminNav == 'legal'} ? 'is-active'"
+                   th:text="#{admin.nav.legal}">Yasal Sayfalar</a></li>
+        </ul>
+
+        <p class="admin-nav-heading" th:text="#{admin.nav.section.inbox}">Gelen Kutusu</p>
+        <ul class="admin-nav-list">
+            <li><a class="admin-nav-link" th:href="@{/admin/siparis-talepleri}"
+                   th:classappend="${adminNav == 'orders'} ? 'is-active'">
+                <span th:text="#{admin.nav.orderRequests}">Sipariş Talepleri</span>
+                <span class="admin-count-pill" th:if="${newRequestCount != null && newRequestCount > 0}"
+                      th:text="${newRequestCount}">3</span>
+            </a></li>
+            <li><a class="admin-nav-link" th:href="@{/admin/mesajlar}"
+                   th:classappend="${adminNav == 'messages'} ? 'is-active'">
+                <span th:text="#{admin.nav.messages}">Mesajlar</span>
+                <span class="admin-count-pill" th:if="${newMessageCount != null && newMessageCount > 0}"
+                      th:text="${newMessageCount}">2</span>
+            </a></li>
+            <li><a class="admin-nav-link" th:href="@{/admin/aboneler}"
+                   th:classappend="${adminNav == 'subscribers'} ? 'is-active'"
+                   th:text="#{admin.nav.subscribers}">Aboneler</a></li>
+        </ul>
+
+        <p class="admin-nav-heading" th:text="#{admin.nav.section.account}">Hesap</p>
+        <ul class="admin-nav-list">
+            <li><a class="admin-nav-link" th:href="@{/admin/sifre}"
+                   th:classappend="${adminNav == 'password'} ? 'is-active'"
+                   th:text="#{admin.nav.password}">Şifre Değiştir</a></li>
+        </ul>
+    </nav>
+</aside>
+</body>
+</html>

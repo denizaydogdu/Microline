@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="#{admin.reviews.title} + ' — ' + #{admin.title}">Yorumlar — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title" th:text="#{admin.reviews.title}">Yorumlar</h1>
+    </div>
+
+    <div class="form-banner form-banner-success" role="status" th:if="${flashSuccess}"
+         th:text="#{${flashSuccess}}">Kaydedildi.</div>
+
+    <p class="form-hint" th:text="#{admin.reviews.note}">Yalnız onaylı yorumlar vitrinde görünür.</p>
+
+    <p class="admin-empty" th:if="${#lists.isEmpty(reviews)}"
+       th:text="#{admin.reviews.empty}">Henüz yorum yok.</p>
+
+    <table class="admin-table" th:unless="${#lists.isEmpty(reviews)}">
+        <thead>
+        <tr>
+            <th th:text="#{admin.reviews.col.author}">Yazar</th>
+            <th th:text="#{admin.reviews.col.rating}">Puan</th>
+            <th th:text="#{admin.reviews.col.product}">Ürün</th>
+            <th th:text="#{admin.reviews.col.locale}">Dil</th>
+            <th th:text="#{admin.col.status}">Durum</th>
+            <th th:text="#{admin.reviews.col.body}">Yorum</th>
+            <th th:text="#{admin.col.actions}">İşlemler</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${reviews}">
+            <td th:text="${r.authorName}">Ayşe K.</td>
+            <td th:text="${r.rating} + '/5'">5/5</td>
+            <td th:text="${r.product != null ? r.product.nameTr : '-'}">Microline Kesim Makinesi</td>
+            <td th:text="${r.locale}">tr</td>
+            <td>
+                <span class="status-badge" th:classappend="${r.approved} ? 'status-approved' : 'status-pending'"
+                      th:text="${r.approved} ? #{admin.status.approved} : #{admin.status.pending}">Onaylı</span>
+                <span class="status-badge status-featured" th:if="${r.featured}"
+                      th:text="#{admin.status.featured}">Öne çıkan</span>
+            </td>
+            <td th:text="${#strings.abbreviate(r.body, 80)}">Üçüncü sınıf öğrencilerimle...</td>
+            <td class="admin-table-actions">
+                <!--/* Adanmış toggle endpoint'leri: satır formlarında hidden input gerekmez */-->
+                <form method="post" th:action="@{'/admin/yorumlar/' + ${r.id} + '/onay'}">
+                    <button class="btn btn-ghost btn-sm" type="submit"
+                            th:text="${r.approved} ? #{admin.reviews.action.unapprove} : #{admin.reviews.action.approve}">Onayla</button>
+                </form>
+                <form method="post" th:action="@{'/admin/yorumlar/' + ${r.id} + '/one-cikar'}">
+                    <button class="btn btn-ghost btn-sm" type="submit"
+                            th:text="${r.featured} ? #{admin.reviews.action.unfeature} : #{admin.reviews.action.feature}">Öne Çıkar</button>
+                </form>
+                <form method="post" th:action="@{'/admin/yorumlar/' + ${r.id} + '/sil'}" data-confirm>
+                    <button class="btn btn-ghost btn-sm admin-btn-danger" type="submit"
+                            th:text="#{admin.action.delete}">Sil</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

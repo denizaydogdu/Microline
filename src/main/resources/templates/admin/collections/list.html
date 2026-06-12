@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="#{admin.collections.title} + ' — ' + #{admin.title}">Koleksiyonlar — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title" th:text="#{admin.collections.title}">Koleksiyonlar</h1>
+    </div>
+
+    <div class="form-banner form-banner-success" role="status" th:if="${flashSuccess}"
+         th:text="#{${flashSuccess}}">Kaydedildi.</div>
+
+    <p class="form-hint" th:text="#{admin.collections.note}">Koleksiyonlar sabittir.</p>
+
+    <table class="admin-table">
+        <thead>
+        <tr>
+            <th th:text="#{admin.collections.col.name}">Koleksiyon</th>
+            <th th:text="#{admin.collections.col.slug}">Slug</th>
+            <th th:text="#{admin.f.sortOrder}">Sıra</th>
+            <th th:text="#{admin.col.status}">Durum</th>
+            <th th:text="#{admin.col.actions}">İşlemler</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${collections}">
+            <td><a th:href="@{'/admin/koleksiyonlar/' + ${c.id}}" th:text="${c.nameTr}">Kesim Araçları</a></td>
+            <td th:text="${c.slugTr}">kesim-araclari</td>
+            <td th:text="${c.sortOrder}">1</td>
+            <td><span class="status-badge" th:classappend="${c.active} ? 'status-active' : 'status-passive'"
+                      th:text="${c.active} ? #{admin.status.active} : #{admin.status.passive}">Aktif</span></td>
+            <td class="admin-table-actions">
+                <a class="btn btn-ghost btn-sm" th:href="@{'/admin/koleksiyonlar/' + ${c.id}}"
+                   th:text="#{admin.action.edit}">Düzenle</a>
+                <form method="post" th:action="@{'/admin/koleksiyonlar/' + ${c.id} + '/durum'}" data-confirm>
+                    <button class="btn btn-ghost btn-sm" type="submit"
+                            th:text="${c.active} ? #{admin.danger.deactivate} : #{admin.danger.activate}">Pasifleştir</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

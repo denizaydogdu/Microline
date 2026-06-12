@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="#{admin.legal.title} + ' — ' + #{admin.title}">Yasal Sayfalar — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title" th:text="#{admin.legal.title}">Yasal Sayfalar</h1>
+    </div>
+
+    <div class="form-banner form-banner-success" role="status" th:if="${flashSuccess}"
+         th:text="#{${flashSuccess}}">Kaydedildi.</div>
+
+    <p class="form-hint" th:text="#{admin.legal.note}">Yasal sayfalar sabittir.</p>
+
+    <table class="admin-table">
+        <thead>
+        <tr>
+            <th th:text="#{admin.legal.col.title}">Sayfa</th>
+            <th th:text="#{admin.legal.col.slug}">Slug</th>
+            <th th:text="#{admin.col.actions}">İşlemler</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${legalPages}">
+            <td><a th:href="@{'/admin/yasal-sayfalar/' + ${p.id}}" th:text="${p.titleTr}">KVKK Aydınlatma Metni</a></td>
+            <td th:text="${p.slugTr}">kvkk-aydinlatma-metni</td>
+            <td class="admin-table-actions">
+                <a class="btn btn-ghost btn-sm" th:href="@{'/admin/yasal-sayfalar/' + ${p.id}}"
+                   th:text="#{admin.action.edit}">Düzenle</a>
+                <a class="btn btn-ghost btn-sm" th:href="@{'/tr/' + ${p.slugTr}}" target="_blank" rel="noopener"
+                   th:text="#{admin.action.view}">Görüntüle</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

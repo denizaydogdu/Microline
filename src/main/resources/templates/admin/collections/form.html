@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{admin/layout/admin-base}" lang="tr">
+<head>
+    <title th:text="#{admin.collections.editTitle} + ' — ' + #{admin.title}">Koleksiyonu Düzenle — Microline Yönetim</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="admin-page-head">
+        <h1 class="admin-page-title" th:text="#{admin.collections.editTitle} + ': ' + ${collection.nameTr}">Koleksiyonu Düzenle</h1>
+        <a class="btn btn-ghost btn-sm" th:href="@{/admin/koleksiyonlar}" th:text="#{admin.action.back}">Geri</a>
+    </div>
+
+    <div class="form-banner form-banner-success" role="status" th:if="${flashSuccess}"
+         th:text="#{${flashSuccess}}">Kaydedildi.</div>
+
+    <div class="admin-form-card admin-form-card-wide">
+        <!--/* Hero dosyası için multipart şart; dosya seçilmezse mevcut görsel korunur */-->
+        <form class="form" method="post" enctype="multipart/form-data"
+              th:action="@{'/admin/koleksiyonlar/' + ${collection.id}}" th:object="${collectionForm}">
+
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.form.section.tr}">Türkçe içerik</legend>
+                <div class="form-field">
+                    <label for="cf-name-tr" th:text="#{admin.collections.f.nameTr}">Koleksiyon adı (TR)</label>
+                    <input type="text" id="cf-name-tr" th:field="*{nameTr}" required maxlength="200"
+                           th:classappend="${#fields.hasErrors('nameTr')} ? 'field-error-input'">
+                    <p class="field-error" th:if="${#fields.hasErrors('nameTr')}" th:errors="*{nameTr}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="cf-slug-tr" th:text="#{admin.f.slug} + ' (TR)'">Slug (TR)</label>
+                    <input type="text" id="cf-slug-tr" th:field="*{slugTr}" maxlength="200"
+                           th:classappend="${#fields.hasErrors('slugTr')} ? 'field-error-input'">
+                    <p class="form-hint" th:text="#{admin.f.slug.hint}">Boş bırakılırsa addan üretilir.</p>
+                    <p class="form-hint admin-slug-warning" th:text="#{admin.f.slug.warning}">Slug değişimi eski URL'i kırar.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('slugTr')}" th:errors="*{slugTr}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="cf-desc-tr" th:text="#{admin.collections.f.descriptionTr}">Açıklama (TR)</label>
+                    <textarea id="cf-desc-tr" th:field="*{descriptionTr}" rows="4" required
+                              th:classappend="${#fields.hasErrors('descriptionTr')} ? 'field-error-input'"></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('descriptionTr')}" th:errors="*{descriptionTr}">Hata</p>
+                </div>
+            </fieldset>
+
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.form.section.en}">English content (opsiyonel)</legend>
+                <div class="form-field">
+                    <label for="cf-name-en" th:text="#{admin.collections.f.nameEn}">Collection name (EN)</label>
+                    <input type="text" id="cf-name-en" th:field="*{nameEn}" maxlength="200"
+                           th:classappend="${#fields.hasErrors('nameEn')} ? 'field-error-input'">
+                    <p class="field-error" th:if="${#fields.hasErrors('nameEn')}" th:errors="*{nameEn}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="cf-slug-en" th:text="#{admin.f.slug} + ' (EN)'">Slug (EN)</label>
+                    <input type="text" id="cf-slug-en" th:field="*{slugEn}" maxlength="200"
+                           th:classappend="${#fields.hasErrors('slugEn')} ? 'field-error-input'">
+                    <p class="form-hint" th:text="#{admin.f.slug.hint}">Boş bırakılırsa addan üretilir.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('slugEn')}" th:errors="*{slugEn}">Hata</p>
+                </div>
+                <div class="form-field">
+                    <label for="cf-desc-en" th:text="#{admin.collections.f.descriptionEn}">Description (EN)</label>
+                    <textarea id="cf-desc-en" th:field="*{descriptionEn}" rows="4"
+                              th:classappend="${#fields.hasErrors('descriptionEn')} ? 'field-error-input'"></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('descriptionEn')}" th:errors="*{descriptionEn}">Hata</p>
+                </div>
+            </fieldset>
+
+            <fieldset class="admin-fieldset">
+                <legend th:text="#{admin.form.section.commerce}">Fiyat ve katalog</legend>
+                <div class="form-field form-field-narrow">
+                    <label for="cf-sort" th:text="#{admin.f.sortOrder}">Sıra</label>
+                    <input type="number" id="cf-sort" th:field="*{sortOrder}" min="0" step="1" required
+                           th:classappend="${#fields.hasErrors('sortOrder')} ? 'field-error-input'">
+                    <p class="field-error" th:if="${#fields.hasErrors('sortOrder')}" th:errors="*{sortOrder}">Hata</p>
+                </div>
+                <div class="form-field admin-check-field">
+                    <label>
+                        <input type="checkbox" th:field="*{active}">
+                        <span th:text="#{admin.f.active}">Aktif (sitede görünür)</span>
+                    </label>
+                </div>
+                <div class="form-field">
+                    <label for="cf-hero" th:text="#{admin.collections.f.hero}">Kapak görseli</label>
+                    <div class="admin-current-image" th:if="${collection.heroImageUrl != null}">
+                        <img th:src="@{${collection.heroImageUrl}}" th:alt="#{admin.collections.f.hero.current}"
+                             width="160" loading="lazy">
+                        <span class="form-hint" th:text="#{admin.collections.f.hero.current}">Mevcut kapak görseli</span>
+                    </div>
+                    <input type="file" id="cf-hero" name="heroImage" accept="image/jpeg,image/png,image/webp"
+                           th:classappend="${#fields.hasErrors('heroImage')} ? 'field-error-input'">
+                    <p class="form-hint" th:text="#{admin.f.file}">JPEG, PNG veya WebP — en fazla 5MB.</p>
+                    <p class="field-error" th:if="${#fields.hasErrors('heroImage')}" th:errors="*{heroImage}">Hata</p>
+                </div>
+            </fieldset>
+
+            <button class="btn btn-primary" type="submit" th:text="#{admin.action.save}">Kaydet</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

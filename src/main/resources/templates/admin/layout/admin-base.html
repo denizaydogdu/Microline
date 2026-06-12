@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--/* Yönetim paneli asla indekslenmez */-->
+    <meta name="robots" content="noindex,nofollow">
+    <title layout:title-pattern="$CONTENT_TITLE" th:text="#{admin.title}">Microline Yönetim</title>
+    <link rel="icon" type="image/png" th:href="@{/img/brand/favicon.png}">
+    <link rel="stylesheet" th:href="@{/css/tokens.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <script type="module" th:src="@{/js/admin.js}" defer></script>
+    <!--/* JS yokken off-canvas sidebar açılamaz; progressive enhancement
+           gereği görünür kalır (base.html'deki .site-nav kalıbı) */-->
+    <noscript>
+        <style>.admin-sidebar { transform: none !important; position: static !important; }</style>
+    </noscript>
+</head>
+<!--/* CSP 'self': inline confirm() yasak — admin.js mesajı bu data attribute'tan okur */-->
+<body class="admin-body" th:data-msg-confirm="#{admin.confirm.generic}">
+<div class="admin-shell">
+    <aside th:replace="~{admin/fragments/sidebar :: sidebar}"></aside>
+    <div class="admin-main">
+        <header class="admin-topbar">
+            <button class="admin-menu-toggle" type="button" data-menu-toggle
+                    aria-expanded="false" aria-controls="admin-sidebar">
+                <span class="visually-hidden" th:text="#{admin.nav.toggle}">Menü</span>
+                <span class="menu-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+            </button>
+            <div class="admin-topbar-actions">
+                <a class="admin-topbar-link" th:href="@{/tr/}" target="_blank" rel="noopener"
+                   th:text="#{admin.nav.viewSite}">Siteyi görüntüle</a>
+                <span class="admin-topbar-user" th:if="${adminUserName != null}"
+                      th:text="${adminUserName}">admin</span>
+                <form class="admin-logout-form" th:action="@{/admin/cikis}" method="post">
+                    <button class="btn btn-ghost btn-sm" type="submit"
+                            th:text="#{admin.nav.logout}">Çıkış Yap</button>
+                </form>
+            </div>
+        </header>
+        <main id="admin-content" class="admin-content" layout:fragment="content"></main>
+    </div>
+</div>
+</body>
+</html>
