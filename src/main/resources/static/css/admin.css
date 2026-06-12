@@ -93,7 +93,9 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-1);
-  padding: var(--space-1) var(--space-1);
+  /* 44px dokunma hedefi (drawer'da parmakla tıklanır) */
+  min-height: 44px;
+  padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-md);
   color: var(--gray-700);
   text-decoration: none;
@@ -658,7 +660,9 @@
 .admin-filter-pill {
   display: inline-flex;
   align-items: center;
-  padding: var(--space-1) var(--space-2);
+  /* 44px dokunma hedefi */
+  min-height: 44px;
+  padding: var(--space-1) var(--space-3);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-full);
   background-color: var(--color-bg);
