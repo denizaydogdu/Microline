@@ -19,7 +19,8 @@
     <p class="admin-empty" th:if="${#lists.isEmpty(rows)}"
        th:text="#{admin.subscribers.empty}">Henüz bülten abonesi yok.</p>
 
-    <table class="admin-table" th:unless="${#lists.isEmpty(rows)}">
+    <div class="admin-table-wrap">
+<table class="admin-table" th:unless="${#lists.isEmpty(rows)}">
         <thead>
         <tr>
             <th th:text="#{admin.col.email}">E-posta</th>
@@ -40,6 +41,7 @@
         </tr>
         </tbody>
     </table>
+</div>
 
     <nav th:replace="~{admin/fragments/inbox :: pagination}"></nav>
 </div>

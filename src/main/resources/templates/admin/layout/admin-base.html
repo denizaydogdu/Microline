@@ -16,9 +16,7 @@
     <script type="module" th:src="@{/js/admin.js}" defer></script>
     <!--/* JS yokken off-canvas sidebar açılamaz; progressive enhancement
            gereği görünür kalır (base.html'deki .site-nav kalıbı) */-->
-    <noscript>
-        <style>.admin-sidebar { transform: none !important; position: static !important; }</style>
-    </noscript>
+    <noscript><link rel="stylesheet" th:href="@{/css/admin-nojs.css}"></noscript>
 </head>
 <!--/* CSP 'self': inline confirm() yasak — admin.js mesajı bu data attribute'tan okur */-->
 <body class="admin-body" th:data-msg-confirm="#{admin.confirm.generic}">

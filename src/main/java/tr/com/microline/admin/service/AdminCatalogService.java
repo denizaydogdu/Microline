@@ -292,7 +292,20 @@ public class AdminCatalogService {
     @Transactional
     public void deleteImage(Long productId, Long imageId) {
         ProductImage image = ownedImage(productId, imageId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(AdminCatalogService::notFound);
         productImageRepository.delete(image);
+        // Silinen görsel kapaksa: vitrinde kırık <img> kalmasın diye sıradaki
+        // görsele taşı, yoksa null'la
+        if (image.getUrl().equals(product.getHeroImageUrl())) {
+            String nextHero = productImageRepository.findByProductOrderBySortOrder(product).stream()
+                    .filter(img -> !img.getId().equals(imageId))
+                    .map(ProductImage::getUrl)
+                    .findFirst()
+                    .orElse(null);
+            product.setHeroImageUrl(nextHero);
+            productRepository.save(product);
+        }
         imageStorageService.deleteIfUploaded(image.getUrl());
     }
 

@@ -854,3 +854,9 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Dar ekranda geniş tablolar yatay kaydırılır (sütunlar kırpılmasın) */
+.admin-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}

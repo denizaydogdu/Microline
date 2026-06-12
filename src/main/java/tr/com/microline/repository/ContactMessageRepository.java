@@ -10,7 +10,7 @@ public interface ContactMessageRepository extends JpaRepository<ContactMessage, 
 
     long countByStatus(InquiryStatus status);
 
-    Page<ContactMessage> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    Page<ContactMessage> findAllByOrderByCreatedAtDescIdDesc(Pageable pageable);
 
-    Page<ContactMessage> findByStatusOrderByCreatedAtDesc(InquiryStatus status, Pageable pageable);
+    Page<ContactMessage> findByStatusOrderByCreatedAtDescIdDesc(InquiryStatus status, Pageable pageable);
 }

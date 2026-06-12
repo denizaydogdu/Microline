@@ -40,7 +40,8 @@
         <p class="admin-empty" th:if="${#lists.isEmpty(recentRequests)}"
            th:text="#{admin.dashboard.recent.empty}">Henüz sipariş talebi yok.</p>
 
-        <table class="admin-table" th:unless="${#lists.isEmpty(recentRequests)}">
+        <div class="admin-table-wrap">
+<table class="admin-table" th:unless="${#lists.isEmpty(recentRequests)}">
             <thead>
             <tr>
                 <th th:text="#{admin.col.date}">Tarih</th>
@@ -60,6 +61,7 @@
             </tr>
             </tbody>
         </table>
+</div>
     </section>
 </div>
 </body>

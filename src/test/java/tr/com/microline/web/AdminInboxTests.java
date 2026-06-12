@@ -264,6 +264,27 @@ class AdminInboxTests {
         }
     }
 
+    @Test
+    void csvExportNeutralizesFormulaInjection() throws Exception {
+        // @Email yapısal olarak geçerli ama Excel'de formül olarak çalışacak e-posta
+        NewsletterSubscriber evil = new NewsletterSubscriber();
+        evil.setEmail("=HYPERLINK(\"http://evil.example\")@example.com");
+        evil.setLocale("tr");
+        evil.setKvkkConsentAt(Instant.parse("2026-06-02T10:00:00Z"));
+        evil.setUnsubscribeToken(UUID.randomUUID());
+        evil = newsletterSubscriberRepository.save(evil);
+        try {
+            String body = mockMvc.perform(get("/admin/aboneler/disa-aktar").with(admin()))
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+            // Tırnaklı + tek tırnakla kaçışlı: formül hücrede çalışmaz
+            assertThat(body).contains("\"'=HYPERLINK");
+            assertThat(body).doesNotContain("\n=HYPERLINK");
+        } finally {
+            newsletterSubscriberRepository.delete(evil);
+        }
+    }
+
     /* ── Güvenlik ────────────────────────────────────────────────────── */
 
     @Test

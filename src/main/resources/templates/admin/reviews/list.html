@@ -19,7 +19,8 @@
     <p class="admin-empty" th:if="${#lists.isEmpty(reviews)}"
        th:text="#{admin.reviews.empty}">Henüz yorum yok.</p>
 
-    <table class="admin-table" th:unless="${#lists.isEmpty(reviews)}">
+    <div class="admin-table-wrap">
+<table class="admin-table" th:unless="${#lists.isEmpty(reviews)}">
         <thead>
         <tr>
             <th th:text="#{admin.reviews.col.author}">Yazar</th>
@@ -62,6 +63,7 @@
         </tr>
         </tbody>
     </table>
+</div>
 </div>
 </body>
 </html>

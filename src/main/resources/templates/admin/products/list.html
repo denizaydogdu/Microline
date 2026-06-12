@@ -18,7 +18,8 @@
     <p class="admin-empty" th:if="${#lists.isEmpty(products)}"
        th:text="#{admin.products.empty}">Henüz ürün yok.</p>
 
-    <table class="admin-table" th:unless="${#lists.isEmpty(products)}">
+    <div class="admin-table-wrap">
+<table class="admin-table" th:unless="${#lists.isEmpty(products)}">
         <thead>
         <tr>
             <th th:text="#{admin.products.col.product}">Ürün</th>
@@ -48,6 +49,7 @@
         </tr>
         </tbody>
     </table>
+</div>
 </div>
 </body>
 </html>

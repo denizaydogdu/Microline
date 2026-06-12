@@ -18,7 +18,8 @@
     <p class="admin-empty" th:if="${#lists.isEmpty(tutorials)}"
        th:text="#{admin.tutorials.empty}">Henüz eğitim içeriği yok.</p>
 
-    <table class="admin-table" th:unless="${#lists.isEmpty(tutorials)}">
+    <div class="admin-table-wrap">
+<table class="admin-table" th:unless="${#lists.isEmpty(tutorials)}">
         <thead>
         <tr>
             <th th:text="#{admin.tutorials.col.title}">Eğitim</th>
@@ -56,6 +57,7 @@
         </tr>
         </tbody>
     </table>
+</div>
 </div>
 </body>
 </html>

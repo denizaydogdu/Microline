@@ -317,16 +317,19 @@ class AdminCatalogTests {
         assertThat(productRepository.findById(product.getId()).orElseThrow().getHeroImageUrl())
                 .isEqualTo(uploaded.getUrl());
 
-        // Sil: satır + dosya birlikte gider
+        // Sil: satır + dosya birlikte gider; bu görsel kapaktı → hero artık ona
+        // işaret etmemeli (vitrinde kırık <img> kalmasın)
         mockMvc.perform(adminPost("/admin/urunler/{id}/gorseller/{gid}/sil", product.getId(), uploaded.getId()))
                 .andExpect(status().is3xxRedirection());
         assertThat(productImageRepository.findById(uploaded.getId())).isEmpty();
         assertThat(Files.notExists(stored)).isTrue();
 
-        // Kapak seed görseline döndürülür (silinen dosyaya işaret etmesin)
-        Product reloaded = productRepository.findById(product.getId()).orElseThrow();
-        reloaded.setHeroImageUrl(originalHero);
-        productRepository.save(reloaded);
+        Product afterDelete = productRepository.findById(product.getId()).orElseThrow();
+        assertThat(afterDelete.getHeroImageUrl()).isNotEqualTo(uploaded.getUrl());
+
+        // Kapak seed görseline döndürülür (testler arası durum geri yüklenir)
+        afterDelete.setHeroImageUrl(originalHero);
+        productRepository.save(afterDelete);
     }
 
     /* ── Koleksiyonlar ──────────────────────────────────────────────── */

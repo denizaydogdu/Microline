@@ -55,8 +55,8 @@ public class AdminInboxService {
     @Transactional(readOnly = true)
     public Page<OrderRequest> orderRequests(InquiryStatus statusFilter, Pageable pageable) {
         return statusFilter != null
-                ? orderRequestRepository.findByStatusOrderByCreatedAtDesc(statusFilter, pageable)
-                : orderRequestRepository.findAllByOrderByCreatedAtDesc(pageable);
+                ? orderRequestRepository.findByStatusOrderByCreatedAtDescIdDesc(statusFilter, pageable)
+                : orderRequestRepository.findAllByOrderByCreatedAtDescIdDesc(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -77,8 +77,8 @@ public class AdminInboxService {
     @Transactional(readOnly = true)
     public Page<ContactMessage> contactMessages(InquiryStatus statusFilter, Pageable pageable) {
         return statusFilter != null
-                ? contactMessageRepository.findByStatusOrderByCreatedAtDesc(statusFilter, pageable)
-                : contactMessageRepository.findAllByOrderByCreatedAtDesc(pageable);
+                ? contactMessageRepository.findByStatusOrderByCreatedAtDescIdDesc(statusFilter, pageable)
+                : contactMessageRepository.findAllByOrderByCreatedAtDescIdDesc(pageable);
     }
 
     @Transactional(readOnly = true)
@@ -136,14 +136,20 @@ public class AdminInboxService {
     }
 
     /**
-     * E-posta/locale değerleri normalde virgül içermez; yine de virgül,
-     * tırnak veya satır sonu görülürse alan RFC 4180 usulü tırnaklanır.
+     * RFC 4180 tırnaklama + CSV formül enjeksiyonu savunması: =,+,-,@ ile
+     * başlayan değer (örn. e-posta) Excel/Sheets'te formül olarak çalışmasın
+     * diye tırnaklanır ve önüne ' eklenir.
      */
     private static String csvField(String value) {
         if (value == null) {
             return "";
         }
-        if (value.contains(",") || value.contains("\"") || value.contains("\n") || value.contains("\r")) {
+        boolean formulaRisk = !value.isEmpty() && "=+-@\t".indexOf(value.charAt(0)) >= 0;
+        if (formulaRisk) {
+            value = "'" + value;
+        }
+        if (formulaRisk || value.contains(",") || value.contains("\"")
+                || value.contains("\n") || value.contains("\r")) {
             return '"' + value.replace("\"", "\"\"") + '"';
         }
         return value;

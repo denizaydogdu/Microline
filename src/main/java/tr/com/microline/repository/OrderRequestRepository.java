@@ -15,9 +15,9 @@ public interface OrderRequestRepository extends JpaRepository<OrderRequest, Long
 
     List<OrderRequest> findTop5ByOrderByCreatedAtDesc();
 
-    Page<OrderRequest> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    Page<OrderRequest> findAllByOrderByCreatedAtDescIdDesc(Pageable pageable);
 
-    Page<OrderRequest> findByStatusOrderByCreatedAtDesc(InquiryStatus status, Pageable pageable);
+    Page<OrderRequest> findByStatusOrderByCreatedAtDescIdDesc(InquiryStatus status, Pageable pageable);
 
     /**
      * Talep detayı tek sorguda: items + product + variant LAZY ve

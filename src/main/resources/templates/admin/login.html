@@ -30,6 +30,9 @@
         <div class="form-banner form-banner-success" role="status" th:if="${param.logout}">
             <p th:text="#{admin.login.loggedOut}">Oturumunuz kapatıldı.</p>
         </div>
+        <div class="form-banner form-banner-success" role="status" th:if="${param.get('sifre-degisti') != null}">
+            <p th:text="#{admin.login.passwordChanged}">Şifreniz güncellendi. Lütfen yeni şifrenizle giriş yapın.</p>
+        </div>
 
         <form class="form admin-login-form" method="post" th:action="@{/admin/giris}">
             <div class="form-field">

@@ -1,5 +1,6 @@
 package tr.com.microline.admin.controller;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,9 +29,15 @@ public class AdminModelAdvice {
 
     @ModelAttribute
     public void addAdminGlobals(Model model, Authentication authentication) {
-        // Giriş sayfası da bu advice'tan geçer — authentication null olabilir
-        model.addAttribute("adminUserName", authentication != null ? authentication.getName() : null);
-        model.addAttribute("newRequestCount", orderRequestRepository.countByStatus(InquiryStatus.NEW));
-        model.addAttribute("newMessageCount", contactMessageRepository.countByStatus(InquiryStatus.NEW));
+        boolean authenticated = authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken);
+        model.addAttribute("adminUserName", authenticated ? authentication.getName() : null);
+        // Sayaç sorguları yalnız kimlik doğrulanmışsa: giriş sayfası (sidebar
+        // render etmez) gereksiz DB yükü almasın
+        model.addAttribute("newRequestCount",
+                authenticated ? orderRequestRepository.countByStatus(InquiryStatus.NEW) : 0L);
+        model.addAttribute("newMessageCount",
+                authenticated ? contactMessageRepository.countByStatus(InquiryStatus.NEW) : 0L);
     }
 }

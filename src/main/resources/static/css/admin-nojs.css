@@ -1,0 +1,5 @@
+/* JS yokken sidebar drawer kapalı kalmasın (CSP 'self' inline <style>'ı engeller) */
+.admin-sidebar {
+  transform: none !important;
+  position: static !important;
+}
