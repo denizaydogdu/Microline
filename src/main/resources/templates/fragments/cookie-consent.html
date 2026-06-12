@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--/* JS localStorage'da onay yoksa hidden'ı kaldırır; JS yoksa banner hiç görünmez
+      (v1 zorunlu olmayan çerez de yüklemez, bilgilendirme amaçlıdır) */-->
+<div th:fragment="cookie-consent" id="cookie-consent" class="cookie-consent" role="dialog"
+     th:attr="aria-label=#{cookie.heading}" hidden>
+    <div class="cookie-consent-inner">
+        <p class="cookie-consent-text">
+            <span th:text="#{cookie.body}">Bu site yalnızca güvenlik için zorunlu çerezler kullanır.</span>
+            <a th:href="${currentLang == 'tr'} ? '/tr/cerez-politikasi' : '/en/cookie-policy'"
+               th:text="#{cookie.link}">Çerez Politikası</a>
+        </p>
+        <div class="cookie-consent-actions">
+            <button type="button" class="btn btn-primary" data-consent="all"
+                    th:text="#{cookie.acceptAll}">Kabul et</button>
+            <button type="button" class="btn btn-secondary" data-consent="necessary"
+                    th:text="#{cookie.necessaryOnly}">Sadece gerekli</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

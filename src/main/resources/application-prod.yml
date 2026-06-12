@@ -1,0 +1,15 @@
+# DigitalOcean droplet + nginx reverse proxy profili.
+# nginx X-Forwarded-For/-Proto başlıklarını set eder; framework stratejisi
+# getRemoteAddr()'ın gerçek istemci IP'sini dönmesini sağlar (spam throttle).
+# DİKKAT: 8080 portu dışarıya KAPALI olmalı (yalnızca 127.0.0.1'e bind veya
+# ufw ile engelli) — aksi hâlde proxy atlanıp başlık taklit edilebilir.
+server:
+  forward-headers-strategy: framework
+  address: 127.0.0.1
+
+spring:
+  thymeleaf:
+    cache: true
+
+microline:
+  base-url: https://www.microline.com.tr

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="#{meta.order.title}">Sipariş Talebi — Microline</title>
+    <meta name="description" th:content="#{meta.order.desc}">
+    <meta name="robots" content="noindex, follow">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-hero">
+        <div class="container page-hero-inner">
+            <h1 th:text="#{form.order.heading}">Sipariş Talebi Oluşturun</h1>
+            <p class="page-hero-desc" th:text="#{form.order.intro}">Formu doldurun, ekibimiz sizi arasın.</p>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <div class="container form-container">
+            <div class="form-banner form-banner-success" role="status" th:if="${formSuccess}">
+                <strong th:text="#{form.success.heading}">Talebiniz alındı!</strong>
+                <p th:text="#{form.order.success.body}">En kısa sürede dönüş yapacağız.</p>
+                <p th:if="${orderedTotal != null}"
+                   th:text="#{checkout.success.summary(${orderedCount}, ${orderedTotal})}">2 ürün — 9.980 ₺</p>
+            </div>
+
+            <!--/* Salt-okunur sipariş özeti: satırlar session sepetinden gelir,
+                   formda ürün alanı yoktur (tamper yüzeyi yok) */-->
+            <div class="checkout-summary card" th:if="${formSuccess == null and cart != null and !cart.isEmpty()}">
+                <h2 class="checkout-summary-heading" th:text="#{checkout.summary.heading}">Sipariş Özeti</h2>
+                <ul class="checkout-summary-lines">
+                    <li th:each="line : ${cart.lines}">
+                        <span th:text="${line.product.getName(#locale)}
+                              + (${line.variant != null} ? ' — ' + ${line.variant.getName(#locale)} : '')
+                              + ' × ' + ${line.quantity}">Microline × 2</span>
+                        <span class="price" th:text="${@prices.format(line.lineTotal, #locale)}">9.980 ₺</span>
+                    </li>
+                </ul>
+                <p class="checkout-summary-total">
+                    <span th:text="#{cart.total}">Toplam</span>
+                    <span class="price price-lg" th:text="${@prices.format(cart.total, #locale)}">9.980 ₺</span>
+                </p>
+                <p class="price-vat" th:text="#{product.price.vat}">KDV dahildir</p>
+                <a class="checkout-edit-link" th:href="${routes['CART'].path(#locale)}"
+                   th:text="#{checkout.editCart}">Sepeti Düzenle</a>
+            </div>
+
+            <form th:if="${formSuccess == null}" class="form" method="post"
+                  th:action="${currentLang == 'tr'} ? @{/tr/siparis-talebi} : @{/en/order-request}"
+                  th:object="${checkoutForm}">
+
+                <!--/* Honeypot: insan görmez/dolduramaz, bot doldurur */-->
+                <div class="hp-field" aria-hidden="true">
+                    <label for="website">Website</label>
+                    <input type="text" id="website" th:field="*{website}" tabindex="-1" autocomplete="off">
+                </div>
+                <input type="hidden" th:field="*{formRenderedAt}">
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="of-fullname" th:text="#{form.order.fullName}">Ad Soyad</label>
+                        <input type="text" id="of-fullname" th:field="*{fullName}" required maxlength="150"
+                               th:classappend="${#fields.hasErrors('fullName')} ? 'field-error-input'">
+                        <p class="field-error" th:if="${#fields.hasErrors('fullName')}"
+                           th:errors="*{fullName}">Hata</p>
+                    </div>
+                    <div class="form-field">
+                        <label for="of-email" th:text="#{form.email}">E-posta</label>
+                        <input type="email" id="of-email" th:field="*{email}" required maxlength="254"
+                               th:classappend="${#fields.hasErrors('email')} ? 'field-error-input'">
+                        <p class="field-error" th:if="${#fields.hasErrors('email')}"
+                           th:errors="*{email}">Hata</p>
+                    </div>
+                    <div class="form-field">
+                        <label for="of-phone" th:text="#{form.phone}">Telefon</label>
+                        <input type="tel" id="of-phone" th:field="*{phone}" required
+                               th:placeholder="#{form.phone.placeholder}"
+                               th:classappend="${#fields.hasErrors('phone')} ? 'field-error-input'">
+                        <p class="field-error" th:if="${#fields.hasErrors('phone')}"
+                           th:errors="*{phone}">Hata</p>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="of-message" th:text="#{form.order.message}">Eklemek istedikleriniz</label>
+                    <textarea id="of-message" th:field="*{message}" rows="4" maxlength="2000"
+                              th:placeholder="#{form.order.message.placeholder}"></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('message')}"
+                       th:errors="*{message}">Hata</p>
+                </div>
+
+                <div class="form-field checkbox-row"
+                     th:classappend="${#fields.hasErrors('kvkkConsent')} ? 'checkbox-row-error'">
+                    <input type="checkbox" id="of-kvkk" th:field="*{kvkkConsent}" required>
+                    <label for="of-kvkk">
+                        <span th:text="#{form.kvkk.label}">Kişisel verilerimin işlenmesini onaylıyorum.</span>
+                        <a th:href="${currentLang == 'tr'} ? '/tr/kvkk-aydinlatma-metni' : '/en/kvkk-privacy-notice'"
+                           th:text="#{form.kvkk.linkText}">KVKK Aydınlatma Metni</a>
+                    </label>
+                </div>
+                <p class="field-error" th:if="${#fields.hasErrors('kvkkConsent')}"
+                   th:errors="*{kvkkConsent}">Hata</p>
+
+                <button class="btn btn-primary btn-lg" type="submit"
+                        th:text="#{form.order.submit}">Talebi Gönder</button>
+            </form>
+
+            <a th:if="${formSuccess}" class="btn btn-secondary"
+               th:href="${currentLang == 'tr'} ? @{/tr/} : @{/en/}"
+               th:text="#{form.backHome}">Ana sayfaya dön</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>

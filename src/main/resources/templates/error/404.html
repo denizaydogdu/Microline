@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="#{error.404.title}">Sayfa bulunamadı</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="error-page">
+        <div class="container">
+            <p class="error-code">404</p>
+            <h1 th:text="#{error.404.title}">Sayfa bulunamadı</h1>
+            <p th:text="#{error.404.body}">Aradığınız sayfa bulunamadı.</p>
+            <a class="btn btn-primary" th:href="${currentLang == 'en'} ? '/en/' : '/tr/'"
+               th:text="#{error.backHome}">Ana sayfaya dön</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>

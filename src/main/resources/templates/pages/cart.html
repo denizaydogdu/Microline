@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="#{meta.cart.title}">Sepetiniz — Microline</title>
+    <meta name="description" th:content="#{meta.cart.desc}">
+    <meta name="robots" content="noindex, follow">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-hero">
+        <div class="container page-hero-inner">
+            <h1 th:text="#{cart.heading}">Sepetiniz</h1>
+        </div>
+    </section>
+
+    <section class="cart-section">
+        <div class="container cart-container">
+
+            <div class="form-banner form-banner-warning" role="status" th:if="${cartItemsRemoved}"
+                 th:text="#{cart.items.removed}">Bazı ürünler kaldırıldı.</div>
+            <div class="form-banner form-banner-warning" role="status" th:if="${cartQtyAdjusted}"
+                 th:text="#{cart.qty.adjusted}">Adet düzeltildi.</div>
+            <div class="form-banner form-banner-warning" role="status" th:if="${cartEmptyCheckout}"
+                 th:text="#{cart.checkout.empty}">Sepetiniz boş.</div>
+
+            <div class="cart-empty" th:if="${cart.isEmpty()}">
+                <p th:text="#{cart.empty}">Sepetiniz şu an boş.</p>
+                <a class="btn btn-primary" th:href="${shopUrl}"
+                   th:text="#{cart.empty.cta}">Alışverişe Başla</a>
+            </div>
+
+            <div class="cart-grid" th:if="${!cart.isEmpty()}">
+                <ul class="cart-lines">
+                    <li class="cart-line" th:each="line : ${cart.lines}">
+                        <a class="cart-line-media" th:href="${@localeUrls.productPath(line.product, #locale)}"
+                           tabindex="-1" aria-hidden="true">
+                            <img th:if="${line.product.heroImageUrl != null}"
+                                 th:src="@{${line.product.heroImageUrl}}"
+                                 th:alt="${line.product.getName(#locale)}" alt="" loading="lazy">
+                        </a>
+                        <div class="cart-line-info">
+                            <a class="cart-line-name" th:href="${@localeUrls.productPath(line.product, #locale)}"
+                               th:text="${line.product.getName(#locale)}">Microline Kesim Makinesi</a>
+                            <span class="cart-line-variant" th:if="${line.variant != null}"
+                                  th:text="${line.variant.getName(#locale)}">Standart Paket</span>
+                            <span class="cart-line-unit"
+                                  th:text="#{cart.line.unitPrice(${@prices.format(line.unitPrice, #locale)})}">Birim: 4.990 ₺</span>
+                        </div>
+                        <form class="cart-line-qty" method="post"
+                              th:action="${currentLang == 'tr'} ? @{/tr/sepet/guncelle} : @{/en/cart/update}">
+                            <input type="hidden" name="productId" th:value="${line.product.id}">
+                            <input type="hidden" name="variantId" th:if="${line.variant != null}"
+                                   th:value="${line.variant.id}">
+                            <label class="visually-hidden" th:for="'qty-' + ${lineStat.index}"
+                                   th:text="#{cart.line.qtyLabel(${line.product.getName(#locale)})}">Adet</label>
+                            <input type="number" th:id="'qty-' + ${lineStat.index}" name="quantity"
+                                   th:value="${line.quantity}" min="1" max="999" inputmode="numeric" required>
+                            <button class="btn btn-secondary btn-sm" type="submit"
+                                    th:text="#{cart.line.update}">Güncelle</button>
+                        </form>
+                        <p class="cart-line-total" th:text="${@prices.format(line.lineTotal, #locale)}">4.990 ₺</p>
+                        <form class="cart-line-remove" method="post"
+                              th:action="${currentLang == 'tr'} ? @{/tr/sepet/kaldir} : @{/en/cart/remove}">
+                            <input type="hidden" name="productId" th:value="${line.product.id}">
+                            <input type="hidden" name="variantId" th:if="${line.variant != null}"
+                                   th:value="${line.variant.id}">
+                            <button class="btn btn-ghost btn-sm" type="submit"
+                                    th:aria-label="#{cart.line.remove.label(${line.product.getName(#locale)})}"
+                                    th:text="#{cart.line.remove}">Kaldır</button>
+                        </form>
+                    </li>
+                </ul>
+
+                <aside class="cart-summary card">
+                    <h2 class="cart-summary-heading" th:text="#{cart.summary.heading}">Özet</h2>
+                    <p class="cart-summary-total">
+                        <span th:text="#{cart.total}">Toplam</span>
+                        <span class="price price-lg" th:text="${@prices.format(cart.total, #locale)}">9.980 ₺</span>
+                    </p>
+                    <p class="price-vat" th:text="#{product.price.vat}">KDV dahildir</p>
+                    <a class="btn btn-primary btn-lg cart-checkout-cta"
+                       th:href="${routes['ORDER_REQUEST'].path(#locale)}"
+                       th:text="#{cart.checkout.cta}">Sipariş Talebine Geç</a>
+                    <p class="cart-summary-note" th:text="#{cart.checkout.note}">Online ödeme yok.</p>
+                    <ul class="usp-list">
+                        <li th:text="#{product.usp.shipping}">Ücretsiz kargo</li>
+                        <li th:text="#{product.usp.warranty}">2 yıl garanti</li>
+                        <li th:text="#{product.usp.returns}">14 gün cayma hakkı</li>
+                    </ul>
+                </aside>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

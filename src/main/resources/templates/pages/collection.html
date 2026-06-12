@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="${collection.getName(#locale)} + ' — ' + #{site.name}">Koleksiyon — Microline</title>
+    <meta name="description" th:content="${collection.getDescription(#locale)}">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="collection-hero">
+        <div class="container collection-hero-inner">
+            <div class="collection-hero-text">
+                <h1 th:text="${collection.getName(#locale)}">Kesim Araçları</h1>
+                <p class="collection-hero-desc" th:text="${collection.getDescription(#locale)}">Koleksiyon açıklaması</p>
+            </div>
+            <img class="collection-hero-img" th:if="${collection.heroImageUrl != null}"
+                 th:src="@{${collection.heroImageUrl}}" th:alt="${collection.getName(#locale)}" alt="">
+        </div>
+    </section>
+
+    <section class="collection-products">
+        <div class="container">
+            <div class="product-grid" th:if="${!products.isEmpty()}">
+                <th:block th:each="p : ${products}">
+                    <article th:replace="~{fragments/components :: product-card(${p})}"></article>
+                </th:block>
+            </div>
+            <p class="collection-empty" th:if="${products.isEmpty()}"
+               th:text="#{collection.products.empty}">Bu koleksiyonda henüz ürün yok.</p>
+        </div>
+    </section>
+</div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="${post.getTitle(#locale)} + ' — ' + #{site.name}">Eğitim — Microline</title>
+    <meta name="description" th:content="${post.getExcerpt(#locale)}">
+</head>
+<body>
+<div layout:fragment="content">
+    <article class="container tutorial-detail">
+        <a class="tutorial-back" th:href="${routes['TUTORIALS'].path(#locale)}"
+           th:text="#{tutorial.back}">Tüm eğitimlere dön</a>
+
+        <h1 th:text="${post.getTitle(#locale)}">Eğitim başlığı</h1>
+
+        <p class="tutorial-meta">
+            <span class="difficulty-badge"
+                  th:classappend="'difficulty-' + ${post.difficulty.cssSuffix()}"
+                  th:text="${#messages.msg('difficulty.' + post.difficulty.name())}">Başlangıç</span>
+            <time th:if="${publishedDate != null}" th:text="${publishedDate}">15 Ocak 2026</time>
+        </p>
+
+        <div class="tutorial-cover">
+            <img th:if="${post.coverImageUrl != null}" th:src="@{${post.coverImageUrl}}"
+                 th:alt="${post.getTitle(#locale)}" alt="">
+            <span th:if="${post.coverImageUrl == null}" aria-hidden="true"
+                  th:text="${post.getTitle(#locale)}">Eğitim kapağı</span>
+        </div>
+
+        <!--/* DB'den güvenilir seed HTML'i (th:utext bilinçli) */-->
+        <div class="tutorial-body" th:utext="${post.getBody(#locale)}">Eğitim içeriği</div>
+    </article>
+
+    <!--/* CTA şeridi → amiral gemisi ürün; seed boşsa gizlenir */-->
+    <section class="cta-band" th:if="${ctaUrl != null}">
+        <div class="container cta-band-inner">
+            <h2 th:text="#{tutorial.cta.title}">Hazır mısınız?</h2>
+            <p class="cta-band-body" th:text="#{tutorial.cta.body}">CTA açıklaması</p>
+            <a class="btn btn-primary btn-lg" th:href="${ctaUrl}"
+               th:text="#{tutorial.cta.button}">Microline'ı Keşfet</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>

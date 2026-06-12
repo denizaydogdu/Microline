@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="#{meta.contact.title}">İletişim — Microline</title>
+    <meta name="description" th:content="#{meta.contact.desc}">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-hero">
+        <div class="container page-hero-inner">
+            <h1 th:text="#{contact.heading}">Bize Ulaşın</h1>
+            <p class="page-hero-desc" th:text="#{contact.intro}">Sorularınız için buradayız.</p>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <div class="container contact-grid">
+            <aside class="contact-info">
+                <h2 th:text="#{contact.info.heading}">İletişim Bilgileri</h2>
+                <p class="contact-info-row">
+                    <span class="contact-info-label" th:text="#{form.email}">E-posta</span>
+                    <a th:href="'mailto:' + #{contact.info.email}" th:text="#{contact.info.email}">info@microline.com.tr</a>
+                </p>
+                <p class="contact-info-row">
+                    <span class="contact-info-label" th:text="#{form.phone}">Telefon</span>
+                    <a th:href="'tel:' + #{contact.info.phoneHref}" th:text="#{contact.info.phone}">+90 212 000 00 00</a>
+                </p>
+                <p class="contact-info-row">
+                    <span class="contact-info-label" th:text="#{contact.info.addressLabel}">Adres</span>
+                    <span th:text="#{contact.info.address}">İstanbul, Türkiye</span>
+                </p>
+                <p class="contact-info-note" th:text="#{contact.info.responseTime}">1-2 iş günü içinde yanıtlıyoruz.</p>
+            </aside>
+
+            <div class="form-container">
+                <div class="form-banner form-banner-success" role="status" th:if="${formSuccess}">
+                    <strong th:text="#{form.success.heading}">Mesajınız alındı!</strong>
+                    <p th:text="#{form.contact.success.body}">En kısa sürede dönüş yapacağız.</p>
+                </div>
+
+                <form th:if="${formSuccess == null}" class="form" method="post"
+                      th:action="${currentLang == 'tr'} ? @{/tr/iletisim} : @{/en/contact}"
+                      th:object="${contactForm}">
+
+                    <div class="hp-field" aria-hidden="true">
+                        <label for="cf-website">Website</label>
+                        <input type="text" id="cf-website" th:field="*{website}" tabindex="-1" autocomplete="off">
+                    </div>
+                    <input type="hidden" th:field="*{formRenderedAt}">
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="cf-name" th:text="#{form.contact.name}">Adınız</label>
+                            <input type="text" id="cf-name" th:field="*{name}" required maxlength="150"
+                                   th:classappend="${#fields.hasErrors('name')} ? 'field-error-input'">
+                            <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Hata</p>
+                        </div>
+                        <div class="form-field">
+                            <label for="cf-email" th:text="#{form.email}">E-posta</label>
+                            <input type="email" id="cf-email" th:field="*{email}" required maxlength="254"
+                                   th:classappend="${#fields.hasErrors('email')} ? 'field-error-input'">
+                            <p class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Hata</p>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="cf-subject" th:text="#{form.contact.subject}">Konu</label>
+                        <input type="text" id="cf-subject" th:field="*{subject}" required maxlength="200"
+                               th:classappend="${#fields.hasErrors('subject')} ? 'field-error-input'">
+                        <p class="field-error" th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}">Hata</p>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="cf-message" th:text="#{form.contact.message}">Mesajınız</label>
+                        <textarea id="cf-message" th:field="*{message}" rows="6" required maxlength="5000"
+                                  th:classappend="${#fields.hasErrors('message')} ? 'field-error-input'"></textarea>
+                        <p class="field-error" th:if="${#fields.hasErrors('message')}" th:errors="*{message}">Hata</p>
+                    </div>
+
+                    <div class="form-field checkbox-row"
+                         th:classappend="${#fields.hasErrors('kvkkConsent')} ? 'checkbox-row-error'">
+                        <input type="checkbox" id="cf-kvkk" th:field="*{kvkkConsent}" required>
+                        <label for="cf-kvkk">
+                            <span th:text="#{form.kvkk.label}">Kişisel verilerimin işlenmesini onaylıyorum.</span>
+                            <a th:href="${currentLang == 'tr'} ? '/tr/kvkk-aydinlatma-metni' : '/en/kvkk-privacy-notice'"
+                               th:text="#{form.kvkk.linkText}">KVKK Aydınlatma Metni</a>
+                        </label>
+                    </div>
+                    <p class="field-error" th:if="${#fields.hasErrors('kvkkConsent')}"
+                       th:errors="*{kvkkConsent}">Hata</p>
+
+                    <button class="btn btn-primary btn-lg" type="submit"
+                            th:text="#{form.contact.submit}">Mesajı Gönder</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

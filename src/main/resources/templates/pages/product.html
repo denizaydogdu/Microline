@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="${product.getName(#locale)} + ' — ' + #{site.name}">Ürün — Microline</title>
+    <meta name="description" th:content="${product.getMetaDescription(#locale)}">
+    <meta property="og:title" th:content="${product.getName(#locale)}">
+    <meta property="og:description" th:content="${product.getMetaDescription(#locale)}">
+    <meta property="og:image" th:if="${product.heroImageUrl != null}"
+          th:content="${baseUrl} + ${product.heroImageUrl}">
+    <!--/* CSP script-src JSON-LD'yi engellemez: ld+json script olarak çalıştırılmaz.
+           th:inline=javascript değerleri JSON-güvenli kaçışlar */-->
+    <script type="application/ld+json" th:inline="javascript" th:if="${reviewCount > 0}">
+    {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": /*[[${product.getName(#locale)}]]*/ "Microline",
+        "description": /*[[${product.getMetaDescription(#locale)}]]*/ "",
+        "image": /*[[${product.heroImageUrl != null ? baseUrl + product.heroImageUrl : null}]]*/ null,
+        "sku": /*[[${product.sku}]]*/ "",
+        "brand": {"@type": "Brand", "name": "Microline"},
+        "offers": {
+            "@type": "Offer",
+            "price": /*[[${product.priceAmount}]]*/ 0,
+            "priceCurrency": /*[[${product.currency}]]*/ "TRY",
+            "availability": "https://schema.org/InStock",
+            "url": /*[[${canonicalUrl}]]*/ ""
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": /*[[${#numbers.formatDecimal(ratingAvg, 1, 1)}]]*/ "4.8",
+            "reviewCount": /*[[${reviewCount}]]*/ 1
+        }
+    }
+    </script>
+    <script type="application/ld+json" th:inline="javascript" th:if="${reviewCount == 0}">
+    {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": /*[[${product.getName(#locale)}]]*/ "Microline",
+        "description": /*[[${product.getMetaDescription(#locale)}]]*/ "",
+        "image": /*[[${product.heroImageUrl != null ? baseUrl + product.heroImageUrl : null}]]*/ null,
+        "sku": /*[[${product.sku}]]*/ "",
+        "brand": {"@type": "Brand", "name": "Microline"},
+        "offers": {
+            "@type": "Offer",
+            "price": /*[[${product.priceAmount}]]*/ 0,
+            "priceCurrency": /*[[${product.currency}]]*/ "TRY",
+            "availability": "https://schema.org/InStock",
+            "url": /*[[${canonicalUrl}]]*/ ""
+        }
+    }
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="product-page">
+        <div class="container product-page-grid">
+
+            <!--/* Galeri: JS thumbnail tıklamasında ana görselin src/alt'ını değiştirir;
+                   JS'siz ilk görsel sabit kalır. */-->
+            <div class="product-gallery">
+                <div class="gallery-main" id="gallery-main">
+                    <img th:if="${!images.isEmpty()}" id="gallery-main-img"
+                         th:src="@{${images[0].url}}" th:alt="${images[0].getAlt(#locale)}" alt="">
+                    <span th:if="${images.isEmpty()}" class="gallery-alt" id="gallery-main-alt"
+                          th:text="${product.getName(#locale)}">Ürün görseli</span>
+                </div>
+                <ul class="gallery-thumbs" th:if="${images.size() > 1}">
+                    <li th:each="img, it : ${images}">
+                        <button type="button" class="gallery-thumb" th:classappend="${it.first} ? 'is-active'"
+                                data-gallery-thumb
+                                th:data-src="@{${img.url}}"
+                                th:data-alt="${img.getAlt(#locale)}"
+                                th:aria-label="${img.getAlt(#locale)}">
+                            <img th:src="@{${img.url}}" th:alt="${img.getAlt(#locale)}" alt="" loading="lazy">
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <!--/* Satın alma kutusu */-->
+            <div class="buy-box">
+                <!--/* PRG hedefi: sepete ekleme #cart-banner'a döner; tabindex=-1
+                       URL fragment'ının JS'siz odak alabilmesi için */-->
+                <div class="form-banner form-banner-success cart-added-banner" role="status"
+                     id="cart-banner" tabindex="-1" th:if="${cartAdded}">
+                    <strong th:text="#{cart.added}">Sepete eklendi!</strong>
+                    <p class="cart-added-actions">
+                        <a class="btn btn-primary" th:href="${routes['CART'].path(#locale)}"
+                           th:text="#{cart.added.goToCart}">Sepete Git</a>
+                        <span th:text="#{cart.added.continue}">veya alışverişe devam edin</span>
+                    </p>
+                </div>
+
+                <h1 class="buy-box-title" th:text="${product.getName(#locale)}">Microline Kesim Makinesi</h1>
+                <p class="buy-box-tagline" th:text="${product.getTagline(#locale)}">Ürün sloganı</p>
+
+                <p class="rating-summary" th:if="${reviewCount > 0}">
+                    <span class="stars" aria-hidden="true">
+                        <span th:each="i : ${#numbers.sequence(1,5)}" class="star"
+                              th:classappend="${i > ratingRounded} ? 'is-empty'">★</span>
+                    </span>
+                    <span class="rating-value" th:text="${#numbers.formatDecimal(ratingAvg, 1, 1)}">4,8</span>
+                    <span class="rating-count" th:text="#{product.reviews.summary(${reviewCount})}">12 değerlendirme</span>
+                </p>
+                <p class="rating-summary rating-summary-empty" th:if="${reviewCount == 0}"
+                   th:text="#{product.reviews.none}">Henüz değerlendirme yok.</p>
+
+                <p class="buy-box-price">
+                    <span class="price price-lg" id="buy-price"
+                          th:text="${@prices.format(product.priceAmount, #locale)}">4.990 ₺</span>
+                    <del class="price-compare" th:if="${product.compareAtPrice != null}"
+                         th:text="${@prices.format(product.compareAtPrice, #locale)}">5.990 ₺</del>
+                    <span class="price-vat" th:text="#{product.price.vat}">KDV dahildir</span>
+                </p>
+
+                <!--/* Sepete ekleme formu: varyant radio'ları artık gerçek input
+                       (name=variantId); data-variant-price JS fiyat güncellemesi
+                       için kalır (product.js) */-->
+                <form class="buy-box-form" method="post"
+                      th:action="${currentLang == 'tr'} ? @{/tr/sepet/ekle} : @{/en/cart/add}">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+
+                    <fieldset class="variant-group" th:if="${!variants.isEmpty()}">
+                        <legend class="variant-legend" th:text="#{product.variants.legend}">Paketinizi seçin</legend>
+                        <label class="variant-card" th:each="v, it : ${variants}">
+                            <input type="radio" name="variantId" th:value="${v.id}" th:checked="${it.first}"
+                                   th:data-variant-price="${@prices.format(product.priceAmount.add(v.priceDelta), #locale)}">
+                            <span class="variant-name" th:text="${v.getName(#locale)}">Standart Paket</span>
+                            <span class="variant-price"
+                                  th:text="${@prices.format(product.priceAmount.add(v.priceDelta), #locale)}">4.990 ₺</span>
+                        </label>
+                    </fieldset>
+
+                    <div class="buy-box-actions">
+                        <div class="qty-field">
+                            <label for="buy-qty" th:text="#{cart.qty}">Adet</label>
+                            <input type="number" id="buy-qty" name="quantity" value="1" min="1" max="999"
+                                   inputmode="numeric" required>
+                        </div>
+                        <button class="btn btn-primary btn-lg buy-box-cta" type="submit"
+                                th:text="#{cart.add}">Sepete Ekle</button>
+                    </div>
+                    <!--/* Alıcının karar anındaki iki sessiz itirazı: "kart mı isteyecek?"
+                           ve "fiyat gerçek mi?" — ikisi de CTA'nın hemen altında yanıtlanır */-->
+                    <p class="buy-box-nopayment" th:text="#{product.noPayment.note}">Şimdi ödeme yok.</p>
+                </form>
+
+                <ul class="buy-box-usps">
+                    <li th:text="#{product.usp.shipping}">Ücretsiz kargo</li>
+                    <li th:text="#{product.usp.warranty}">2 yıl garanti</li>
+                    <li th:text="#{product.usp.returns}">14 gün cayma hakkı</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!--/* Kutu içeriği */-->
+    <section class="product-section">
+        <div class="container">
+            <h2 th:text="#{product.box.heading}">Kutuda neler var?</h2>
+            <ul class="box-list">
+                <li th:text="#{product.box.item1}">Microline Kesim Makinesi</li>
+                <li th:text="#{product.box.item2}">Standart bıçak modülü</li>
+                <li th:text="#{product.box.item3}">USB-C kablosu</li>
+                <li th:text="#{product.box.item4}">Başlangıç şablonları</li>
+                <li th:text="#{product.box.item5}">Hızlı başlangıç kılavuzu</li>
+            </ul>
+        </div>
+    </section>
+
+    <!--/* Açıklama: DB'den güvenilir seed HTML'i (th:utext bilinçli) */-->
+    <section class="product-section">
+        <div class="container product-description" th:utext="${product.getDescription(#locale)}">
+            Ürün açıklaması
+        </div>
+    </section>
+
+    <!--/* Teknik özellikler */-->
+    <section class="product-section" th:if="${!specs.isEmpty()}">
+        <div class="container">
+            <h2 th:text="#{product.specs.heading}">Teknik özellikler</h2>
+            <table class="specs-table">
+                <caption class="visually-hidden" th:text="#{product.specs.heading}">Teknik özellikler</caption>
+                <tbody>
+                <tr th:each="row : ${specs}">
+                    <th scope="row" th:text="${#messages.msgOrNull('spec.' + row.key)} ?: ${row.key}">Özellik</th>
+                    <td th:text="${row.value}">Değer</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!--/* Güvenlik notları + uygunluk rozetleri */-->
+    <section class="product-section">
+        <div class="container">
+            <h2 th:text="#{product.safety.heading}">Güvenlik notları</h2>
+            <div class="safety-notes" th:utext="${product.getSafetyNotes(#locale)}">Güvenlik notları</div>
+            <p class="badge-strip">
+                <span class="badge-strip-note" th:text="#{product.badges.note}">Standartlara uygundur:</span>
+                <span class="badge" th:text="#{product.badge.en71}">EN 71</span>
+                <span class="badge" th:text="#{product.badge.ce}">CE</span>
+                <span class="badge" th:text="#{product.badge.rohs}">RoHS</span>
+            </p>
+        </div>
+    </section>
+
+    <!--/* Değerlendirmeler (onaylı + mevcut dil) */-->
+    <section class="product-section">
+        <div class="container">
+            <h2 th:text="#{product.reviews.heading}">Değerlendirmeler</h2>
+            <div class="review-grid" th:if="${!reviews.isEmpty()}">
+                <article class="review-card" th:each="r : ${reviews}">
+                    <p class="stars" aria-hidden="true">
+                        <span th:each="i : ${#numbers.sequence(1,5)}" class="star"
+                              th:classappend="${i > r.rating} ? 'is-empty'">★</span>
+                    </p>
+                    <p class="review-body" th:text="${r.body}">Yorum metni</p>
+                    <p class="review-author">
+                        <span th:text="${r.authorName}">Ad Soyad</span><th:block
+                            th:if="${r.getAuthorTitle(#locale) != null}"> — <span
+                            th:text="${r.getAuthorTitle(#locale)}">Unvan</span></th:block>
+                    </p>
+                </article>
+            </div>
+            <p th:if="${reviews.isEmpty()}" class="reviews-empty"
+               th:text="#{product.reviews.none}">Henüz değerlendirme yok.</p>
+        </div>
+    </section>
+
+    <script type="module" th:src="@{/js/product.js}" defer></script>
+</div>
+</body>
+</html>

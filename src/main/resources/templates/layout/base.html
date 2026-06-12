@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      th:lang="${currentLang}" lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Sayfa şablonları kendi <title> ve meta description'ını getirir -->
+    <title layout:title-pattern="$CONTENT_TITLE" th:text="#{site.name}">Microline</title>
+
+    <!--/* SEO: canonical + hreflang çiftleri. Dinamik sayfalar model'e açık
+           alternateUrl koyar; statikler route'tan türetilir; hata sayfalarında
+           (ikisi de yok) blok hiç basılmaz. x-default Türkçe sürümü gösterir. */-->
+    <!--/* th:if th:with'ten ÖNCE değerlendirilir (öncelik 300 < 600) — bu
+           yüzden with dış blokta, if iç blokta olmak zorunda */-->
+    <th:block th:with="altPath=${alternateUrl != null ? alternateUrl : (route != null ? @localeUrls.alternate(route, #locale) : null)}">
+        <th:block th:if="${altPath != null}">
+            <link rel="canonical" th:href="${canonicalUrl}">
+            <link rel="alternate" hreflang="tr"
+                  th:href="${currentLang == 'tr' ? canonicalUrl : baseUrl + altPath}">
+            <link rel="alternate" hreflang="en"
+                  th:href="${currentLang == 'en' ? canonicalUrl : baseUrl + altPath}">
+            <link rel="alternate" hreflang="x-default"
+                  th:href="${currentLang == 'tr' ? canonicalUrl : baseUrl + altPath}">
+            <meta property="og:url" th:content="${canonicalUrl}">
+        </th:block>
+    </th:block>
+    <meta property="og:site_name" th:content="#{site.name}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" th:content="${currentLang == 'tr'} ? 'tr_TR' : 'en_US'">
+    <meta property="og:image" th:content="${baseUrl} + '/img/pages/hero-home.jpg'">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" th:href="@{/img/brand/favicon.png}">
+    <link rel="stylesheet" th:href="@{/css/tokens.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/pages.css}">
+    <script type="module" th:src="@{/js/menu.js}" defer></script>
+    <script type="module" th:src="@{/js/forms.js}" defer></script>
+    <script type="module" th:src="@{/js/cookie-consent.js}" defer></script>
+    <!--/* JS yokken mobil menü display:none kalır (menu.js .is-open ekleyemez);
+           progressive enhancement kuralı gereği menü açık listeye düşer */-->
+    <noscript>
+        <style>.site-nav { display: block !important; }</style>
+    </noscript>
+</head>
+<!--/* Tarayıcının yerleşik form uyarıları tarayıcı dilindedir (TR sitede İngilizce
+       balon çıkar); forms.js bu data attribute'lardaki çevirilerle override eder */-->
+<body th:data-msg-required="#{validation.required}"
+      th:data-msg-email="#{validation.email}"
+      th:data-msg-kvkk="#{validation.kvkk}"
+      th:data-msg-qty="#{validation.quantity}">
+<header th:replace="~{fragments/header :: header}"></header>
+<main id="main" layout:fragment="content"></main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<div th:replace="~{fragments/cookie-consent :: cookie-consent}"></div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/microline_test
+    username: microline
+    password: microline
+  flyway:
+    clean-disabled: false
+
+# Tüm testler 127.0.0.1'den gelir; üretim limiti (5/10dk) test akışını boğar
+microline:
+  throttle:
+    max-per-window: 1000

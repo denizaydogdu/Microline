@@ -1,0 +1,14 @@
+spring:
+  thymeleaf:
+    cache: false
+  web:
+    resources:
+      cache:
+        period: 0
+
+microline:
+  base-url: http://localhost:8080
+
+logging:
+  level:
+    org.hibernate.SQL: debug

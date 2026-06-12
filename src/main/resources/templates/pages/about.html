@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="#{meta.about.title}">Hakkımızda — Microline</title>
+    <meta name="description" th:content="#{meta.about.desc}">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-hero">
+        <div class="container page-hero-inner">
+            <h1 th:text="#{about.hero.title}">Neden Microline?</h1>
+            <p class="page-hero-desc" th:text="#{about.hero.subtitle}">Kurucu hikayesi girişi</p>
+        </div>
+    </section>
+
+    <section class="page-section">
+        <div class="container">
+            <img class="page-media" th:src="@{/img/pages/atolye.jpg}"
+                 th:alt="#{about.workshopAlt}" alt="" loading="lazy">
+        </div>
+    </section>
+
+    <!--/* Kurucu hikayesi: yıl rozetli zaman çizelgesi */-->
+    <section class="page-section">
+        <div class="container">
+            <h2 class="section-heading" th:text="#{about.timeline.heading}">Hikayemiz</h2>
+            <ol class="timeline">
+                <li class="timeline-item">
+                    <span class="timeline-year" th:text="#{about.timeline.1.year}">2022</span>
+                    <div class="timeline-content">
+                        <h3 th:text="#{about.timeline.1.title}">Kıvılcım</h3>
+                        <p class="timeline-body" th:text="#{about.timeline.1.body}">İlk atölye</p>
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <span class="timeline-year" th:text="#{about.timeline.2.year}">2023</span>
+                    <div class="timeline-content">
+                        <h3 th:text="#{about.timeline.2.title}">Prototipler</h3>
+                        <p class="timeline-body" th:text="#{about.timeline.2.body}">Prototipler</p>
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <span class="timeline-year" th:text="#{about.timeline.3.year}">2024</span>
+                    <div class="timeline-content">
+                        <h3 th:text="#{about.timeline.3.title}">Güvenlik testleri</h3>
+                        <p class="timeline-body" th:text="#{about.timeline.3.body}">Güvenlik testleri</p>
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <span class="timeline-year" th:text="#{about.timeline.4.year}">Bugün</span>
+                    <div class="timeline-content">
+                        <h3 th:text="#{about.timeline.4.title}">Bugün</h3>
+                        <p class="timeline-body" th:text="#{about.timeline.4.body}">Bugün</p>
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!--/* Misyon bandı */-->
+    <section class="mission-band">
+        <div class="container mission-band-inner">
+            <h2 th:text="#{about.mission.heading}">Misyonumuz</h2>
+            <p th:text="#{about.mission.body}">Misyon metni</p>
+        </div>
+    </section>
+
+    <!--/* Değerler: ana sayfadaki kart metinleri yeniden kullanılır */-->
+    <section class="page-section">
+        <div class="container">
+            <h2 class="section-heading" th:text="#{about.values.heading}">Değerlerimiz</h2>
+            <div class="grid grid-3">
+                <article class="card">
+                    <h3 class="card-title" th:text="#{home.value.safety.title}">Çocuk Güvenli Tasarım</h3>
+                    <p class="card-body" th:text="#{home.value.safety.body}">Açıklama</p>
+                </article>
+                <article class="card">
+                    <h3 class="card-title" th:text="#{home.value.creativity.title}">Sınırsız Yaratıcılık</h3>
+                    <p class="card-body" th:text="#{home.value.creativity.body}">Açıklama</p>
+                </article>
+                <article class="card">
+                    <h3 class="card-title" th:text="#{home.value.eco.title}">Sürdürülebilir Oyun</h3>
+                    <p class="card-body" th:text="#{home.value.eco.body}">Açıklama</p>
+                </article>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

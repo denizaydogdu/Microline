@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<body>
+<footer class="site-footer" th:fragment="footer">
+    <div class="container footer-grid">
+        <div class="footer-col">
+            <h2 class="footer-heading" th:text="#{footer.heading.services}">Hizmetler ve Yasal</h2>
+            <!--/* Yasal sayfalar Phase 7'de LegalPageController fallback'inden servis edilecek */-->
+            <ul class="footer-links">
+                <li><a th:href="${currentLang == 'tr'} ? '/tr/mesafeli-satis-sozlesmesi' : '/en/distance-sales-agreement'"
+                       th:text="#{footer.legal.distanceSales}">Mesafeli Satış Sözleşmesi</a></li>
+                <li><a th:href="${currentLang == 'tr'} ? '/tr/on-bilgilendirme-formu' : '/en/pre-information-form'"
+                       th:text="#{footer.legal.preInformation}">Ön Bilgilendirme Formu</a></li>
+                <li><a th:href="${currentLang == 'tr'} ? '/tr/kvkk-aydinlatma-metni' : '/en/kvkk-privacy-notice'"
+                       th:text="#{footer.legal.kvkk}">KVKK Aydınlatma Metni</a></li>
+                <li><a th:href="${currentLang == 'tr'} ? '/tr/gizlilik-politikasi' : '/en/privacy-policy'"
+                       th:text="#{footer.legal.privacy}">Gizlilik Politikası</a></li>
+                <li><a th:href="${currentLang == 'tr'} ? '/tr/cerez-politikasi' : '/en/cookie-policy'"
+                       th:text="#{footer.legal.cookies}">Çerez Politikası</a></li>
+                <li><a th:href="${currentLang == 'tr'} ? '/tr/iptal-iade-cayma' : '/en/returns-and-withdrawal'"
+                       th:text="#{footer.legal.returns}">İptal, İade ve Cayma Hakkı</a></li>
+                <li><a th:href="${currentLang == 'tr'} ? '/tr/teslimat-kargo' : '/en/shipping-delivery'"
+                       th:text="#{footer.legal.shipping}">Teslimat ve Kargo</a></li>
+                <li><a th:href="${currentLang == 'tr'} ? '/tr/garanti' : '/en/warranty'"
+                       th:text="#{footer.legal.warranty}">Garanti Koşulları</a></li>
+                <li><a th:href="${currentLang == 'tr'} ? '/tr/kullanim-kosullari' : '/en/terms-of-use'"
+                       th:text="#{footer.legal.terms}">Kullanım Koşulları</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h2 class="footer-heading" th:text="#{footer.heading.support}">Destek</h2>
+            <ul class="footer-links">
+                <li><a th:href="${routes['CONTACT'].path(#locale)}" th:text="#{nav.contact}">İletişim</a></li>
+                <li><a th:href="${routes['ABOUT'].path(#locale)}" th:text="#{nav.about}">Hakkımızda</a></li>
+                <li><a th:href="${routes['EDUCATORS'].path(#locale)}" th:text="#{nav.educators}">Eğitimciler</a></li>
+                <li><a th:href="${routes['PRODUCT_SAFETY'].path(#locale)}" th:text="#{nav.productSafety}">Ürün Güvenliği</a></li>
+                <li><a th:href="${routes['SUSTAINABILITY'].path(#locale)}" th:text="#{nav.sustainability}">Yeşil Gelecek</a></li>
+                <li><a th:href="${routes['AFFILIATE'].path(#locale)}" th:text="#{footer.support.affiliate}">Ortaklık Programı</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h2 class="footer-heading" th:text="#{footer.heading.contact}">İletişim</h2>
+            <ul class="footer-links">
+                <li>
+                    <span class="footer-label" th:text="#{footer.contact.email}">E-posta</span>
+                    <a href="mailto:info@microline.com.tr">info@microline.com.tr</a>
+                </li>
+                <li>
+                    <span class="footer-label" th:text="#{footer.contact.phone}">Telefon</span>
+                    <a href="tel:+902120000000">+90 212 000 00 00</a>
+                </li>
+            </ul>
+            <!--/* ETBİS doğrulama karekodu yayın öncesi buraya gömülecek */-->
+            <div class="etbis-badge" th:text="#{footer.etbis}">ETBİS</div>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <p th:text="#{footer.copyright(${#calendars.year(#calendars.createNow())})}">© Microline</p>
+    </div>
+</footer>
+</body>
+</html>

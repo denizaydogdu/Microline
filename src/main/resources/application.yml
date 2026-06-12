@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: microline-web
+  datasource:
+    url: jdbc:postgresql://localhost:5432/microline
+    username: microline
+    password: microline
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
+  thymeleaf:
+    cache: true
+
+server:
+  port: 8080
+  # "framework" yalnızca güvenilir reverse proxy arkasında açılmalı: doğrudan
+  # internete açıkken X-Forwarded-For ile IP throttle taklit edilebilir.
+  # Proxy'li üretimde SPRING_APPLICATION_JSON veya profil ile "framework" yapın.
+  forward-headers-strategy: none
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+microline:
+  base-url: https://www.microline.com.tr

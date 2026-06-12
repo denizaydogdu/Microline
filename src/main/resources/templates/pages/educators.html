@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="#{meta.educators.title}">Eğitimciler — Microline</title>
+    <meta name="description" th:content="#{meta.educators.desc}">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-hero">
+        <div class="container page-hero-inner">
+            <h1 th:text="#{educators.hero.title}">Güvenli Araçlar. Büyük Fikirler.</h1>
+            <p class="page-hero-desc" th:text="#{educators.hero.subtitle}">Eğitimciler girişi</p>
+        </div>
+    </section>
+
+    <section class="page-section">
+        <div class="container">
+            <img class="page-media" th:src="@{/img/pages/sinif.jpg}"
+                 th:alt="#{educators.classroomAlt}" alt="" loading="lazy">
+        </div>
+    </section>
+
+    <!--/* Öğrenmeyi nasıl destekler — 3 kart */-->
+    <section class="page-section">
+        <div class="container">
+            <h2 class="section-heading" th:text="#{educators.learning.heading}">Öğrenmeyi nasıl destekler?</h2>
+            <div class="grid grid-3">
+                <article class="card">
+                    <h3 class="card-title" th:text="#{educators.learning.1.title}">İnce motor becerileri</h3>
+                    <p class="card-body" th:text="#{educators.learning.1.body}">Açıklama</p>
+                </article>
+                <article class="card">
+                    <h3 class="card-title" th:text="#{educators.learning.2.title}">STEAM projeleri</h3>
+                    <p class="card-body" th:text="#{educators.learning.2.body}">Açıklama</p>
+                </article>
+                <article class="card">
+                    <h3 class="card-title" th:text="#{educators.learning.3.title}">Özgüven ve özerklik</h3>
+                    <p class="card-body" th:text="#{educators.learning.3.body}">Açıklama</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!--/* Toplu alım fiyat kademeleri (yer tutucu pazarlama değerleri) */-->
+    <section class="page-section page-section-alt">
+        <div class="container">
+            <h2 class="section-heading" th:text="#{educators.pricing.heading}">Toplu alım fiyatlandırması</h2>
+            <table class="pricing-table">
+                <caption class="visually-hidden" th:text="#{educators.pricing.heading}">Toplu alım fiyatlandırması</caption>
+                <thead>
+                <tr>
+                    <th scope="col" th:text="#{educators.pricing.col.qty}">Adet</th>
+                    <th scope="col" th:text="#{educators.pricing.col.discount}">İndirim</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="#{educators.pricing.tier1.qty}">5+ ünite</td>
+                    <td th:text="#{educators.pricing.tier1.discount}">%10 indirim</td>
+                </tr>
+                <tr>
+                    <td th:text="#{educators.pricing.tier2.qty}">10+ ünite</td>
+                    <td th:text="#{educators.pricing.tier2.discount}">%15 indirim</td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="pricing-note" th:text="#{educators.pricing.note}">Örnek oranlardır.</p>
+        </div>
+    </section>
+
+    <!--/* Sınıf referansı */-->
+    <section class="page-section">
+        <div class="container">
+            <blockquote class="testimonial">
+                <p th:text="#{educators.testimonial.body}">Referans metni</p>
+                <footer class="testimonial-author">
+                    <span th:text="#{educators.testimonial.author}">Ayşe K.</span> —
+                    <span th:text="#{educators.testimonial.role}">Sınıf Öğretmeni</span>
+                </footer>
+            </blockquote>
+        </div>
+    </section>
+
+    <!--/* Güvenlik standartları şeridi (ürün sayfası rozet anahtarları yeniden kullanılır) */-->
+    <section class="page-section page-section-alt">
+        <div class="container">
+            <h2 class="section-heading" th:text="#{educators.safety.heading}">Güvenlik standartları</h2>
+            <p class="badge-strip badge-strip-center">
+                <span class="badge-strip-note" th:text="#{product.badges.note}">Standartlara uygundur:</span>
+                <span class="badge" th:text="#{product.badge.en71}">EN 71</span>
+                <span class="badge" th:text="#{product.badge.ce}">CE</span>
+                <span class="badge" th:text="#{product.badge.rohs}">RoHS</span>
+            </p>
+        </div>
+    </section>
+
+    <!--/* CTA → iletişim */-->
+    <section class="cta-band">
+        <div class="container cta-band-inner">
+            <h2 th:text="#{educators.cta.title}">Sınıfınız için teklif alın</h2>
+            <p class="cta-band-body" th:text="#{educators.cta.body}">CTA açıklaması</p>
+            <a class="btn btn-primary btn-lg" th:href="${routes['CONTACT'].path(#locale)}"
+               th:text="#{educators.cta.button}">İletişime Geçin</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="#{meta.affiliate.title}">Ortaklık Programı — Microline</title>
+    <meta name="description" th:content="#{meta.affiliate.desc}">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-hero">
+        <div class="container page-hero-inner">
+            <h1 th:text="#{affiliate.hero.title}">Microline Ortaklık Programı</h1>
+            <p class="page-hero-desc" th:text="#{affiliate.hero.subtitle}">Ortaklık girişi</p>
+        </div>
+    </section>
+
+    <!--/* Avantaj kartları */-->
+    <section class="page-section">
+        <div class="container">
+            <h2 class="section-heading" th:text="#{affiliate.perks.heading}">Size ne sunuyoruz?</h2>
+            <div class="grid grid-3">
+                <article class="card">
+                    <h3 class="card-title" th:text="#{affiliate.perk.1.title}">%10'a varan komisyon</h3>
+                    <p class="card-body" th:text="#{affiliate.perk.1.body}">Açıklama</p>
+                </article>
+                <article class="card">
+                    <h3 class="card-title" th:text="#{affiliate.perk.2.title}">Özel indirimler</h3>
+                    <p class="card-body" th:text="#{affiliate.perk.2.body}">Açıklama</p>
+                </article>
+                <article class="card">
+                    <h3 class="card-title" th:text="#{affiliate.perk.3.title}">İçerik üretici desteği</h3>
+                    <p class="card-body" th:text="#{affiliate.perk.3.body}">Açıklama</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!--/* 3 adımda katılım */-->
+    <section class="page-section page-section-alt">
+        <div class="container">
+            <h2 class="section-heading" th:text="#{affiliate.steps.heading}">3 adımda başvurun</h2>
+            <ol class="grid grid-3">
+                <li class="step-card">
+                    <span class="step-number" aria-hidden="true">1</span>
+                    <h3 th:text="#{affiliate.step.1.title}">Başvurun</h3>
+                    <p class="card-body" th:text="#{affiliate.step.1.body}">Adım açıklaması</p>
+                </li>
+                <li class="step-card">
+                    <span class="step-number" aria-hidden="true">2</span>
+                    <h3 th:text="#{affiliate.step.2.title}">Onay alın</h3>
+                    <p class="card-body" th:text="#{affiliate.step.2.body}">Adım açıklaması</p>
+                </li>
+                <li class="step-card">
+                    <span class="step-number" aria-hidden="true">3</span>
+                    <h3 th:text="#{affiliate.step.3.title}">Paylaşın ve kazanın</h3>
+                    <p class="card-body" th:text="#{affiliate.step.3.body}">Adım açıklaması</p>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!--/* Başvuru CTA — şimdilik mailto; v2'de form olabilir */-->
+    <section class="cta-band">
+        <div class="container cta-band-inner">
+            <h2 th:text="#{affiliate.cta.title}">Hazır mısınız?</h2>
+            <p class="cta-band-body" th:text="#{affiliate.cta.body}">CTA açıklaması</p>
+            <a class="btn btn-primary btn-lg" href="mailto:ortaklik@microline.com.tr"
+               th:text="#{affiliate.cta.button}">Başvuru E-postası Gönder</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="#{meta.reviews.title}">Yorumlar — Microline</title>
+    <meta name="description" th:content="#{meta.reviews.desc}">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-hero">
+        <div class="container page-hero-inner">
+            <h1 th:text="#{reviews.hero.title}">Aileler ve eğitimciler ne diyor?</h1>
+        </div>
+    </section>
+
+    <section class="page-section">
+        <div class="container">
+            <!--/* Özet başlık: dil örneklemi küçükse servis tüm onaylılardan hesaplar */-->
+            <div class="review-aggregate" th:if="${stats.count > 0}">
+                <p class="review-aggregate-score"
+                   th:text="${#numbers.formatDecimal(stats.average, 1, 1)}">4,9</p>
+                <div class="review-aggregate-meta">
+                    <p class="stars" aria-hidden="true">
+                        <span th:each="i : ${#numbers.sequence(1,5)}" class="star"
+                              th:classappend="${i > stats.rounded()} ? 'is-empty'">★</span>
+                    </p>
+                    <p th:text="#{product.reviews.summary(${stats.count})}">10 değerlendirme</p>
+                    <p th:text="#{reviews.aggregate.fiveStar(${stats.fiveStarPercent})}">5 yıldız oranı: %90</p>
+                </div>
+            </div>
+
+            <!--/* Öne çıkan alıntılar */-->
+            <th:block th:if="${!featuredReviews.isEmpty()}">
+                <h2 th:text="#{reviews.featured.heading}">Öne çıkan yorumlar</h2>
+                <div class="quote-strip">
+                    <blockquote class="review-card quote-card" th:each="r : ${featuredReviews}">
+                        <p class="review-body" th:text="${r.body}">Yorum metni</p>
+                        <footer class="review-author">
+                            <span th:text="${r.authorName}">Ad Soyad</span><th:block
+                                th:if="${r.getAuthorTitle(#locale) != null}"> — <span
+                                th:text="${r.getAuthorTitle(#locale)}">Unvan</span></th:block>
+                        </footer>
+                    </blockquote>
+                </div>
+            </th:block>
+
+            <!--/* Tüm yorumlar (onaylı + mevcut dil) */-->
+            <h2 th:text="#{reviews.all.heading}">Tüm yorumlar</h2>
+            <div class="review-grid" th:if="${!reviews.isEmpty()}">
+                <article class="review-card" th:each="r : ${reviews}">
+                    <p class="stars" aria-hidden="true">
+                        <span th:each="i : ${#numbers.sequence(1,5)}" class="star"
+                              th:classappend="${i > r.rating} ? 'is-empty'">★</span>
+                    </p>
+                    <p class="review-body" th:text="${r.body}">Yorum metni</p>
+                    <p class="review-author">
+                        <span th:text="${r.authorName}">Ad Soyad</span><th:block
+                            th:if="${r.getAuthorTitle(#locale) != null}"> — <span
+                            th:text="${r.getAuthorTitle(#locale)}">Unvan</span></th:block>
+                    </p>
+                </article>
+            </div>
+            <p class="reviews-empty" th:if="${reviews.isEmpty()}"
+               th:text="#{reviews.empty}">Henüz yorum yok.</p>
+        </div>
+    </section>
+</div>
+</body>
+</html>

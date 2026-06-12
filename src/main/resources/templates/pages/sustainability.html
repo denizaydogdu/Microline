@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="#{meta.sustainability.title}">Daha Yeşil Bir Gelecek — Microline</title>
+    <meta name="description" th:content="#{meta.sustainability.desc}">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-hero">
+        <div class="container page-hero-inner">
+            <h1 th:text="#{sustainability.hero.title}">Daha Yeşil Bir Gelecek</h1>
+            <p class="page-hero-desc" th:text="#{sustainability.hero.subtitle}">Sürdürülebilirlik girişi</p>
+        </div>
+    </section>
+
+    <!--/* Fidan sözü (yer tutucu program) */-->
+    <section class="mission-band">
+        <div class="container mission-band-inner">
+            <h2 th:text="#{sustainability.pledge.heading}">Fidan sözümüz</h2>
+            <p th:text="#{sustainability.pledge.body}">Her sipariş için bir fidan</p>
+            <p class="mission-band-note" th:text="#{sustainability.pledge.note}">Yer tutucu not</p>
+        </div>
+    </section>
+
+    <!--/* Nasıl çalışır — 3 adım (ana sayfa step-card kalıbı) */-->
+    <section class="page-section">
+        <div class="container">
+            <h2 class="section-heading" th:text="#{sustainability.how.heading}">Nasıl çalışır?</h2>
+            <ol class="grid grid-3">
+                <li class="step-card">
+                    <span class="step-number" aria-hidden="true">1</span>
+                    <h3 th:text="#{sustainability.how.1.title}">Kutuyu saklayın</h3>
+                    <p class="card-body" th:text="#{sustainability.how.1.body}">Adım açıklaması</p>
+                </li>
+                <li class="step-card">
+                    <span class="step-number" aria-hidden="true">2</span>
+                    <h3 th:text="#{sustainability.how.2.title}">Kesin ve yaratın</h3>
+                    <p class="card-body" th:text="#{sustainability.how.2.body}">Adım açıklaması</p>
+                </li>
+                <li class="step-card">
+                    <span class="step-number" aria-hidden="true">3</span>
+                    <h3 th:text="#{sustainability.how.3.title}">Geri dönüştürün</h3>
+                    <p class="card-body" th:text="#{sustainability.how.3.body}">Adım açıklaması</p>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!--/* Döngüsellik */-->
+    <section class="page-section page-section-alt">
+        <div class="container prose">
+            <h2 th:text="#{sustainability.circular.heading}">Karton: doğanın maker malzemesi</h2>
+            <p th:text="#{sustainability.circular.body1}">Döngüsellik 1</p>
+            <p th:text="#{sustainability.circular.body2}">Döngüsellik 2</p>
+        </div>
+    </section>
+
+    <!--/* CTA → mağaza */-->
+    <section class="cta-band">
+        <div class="container cta-band-inner">
+            <h2 th:text="#{sustainability.cta.title}">Bugün başlayın</h2>
+            <a class="btn btn-primary btn-lg" th:href="${shopUrl}"
+               th:text="#{sustainability.cta.button}">Mağazayı Keşfet</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>

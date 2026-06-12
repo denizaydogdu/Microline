@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="#{meta.home.title}">Microline</title>
+    <meta name="description" th:content="#{meta.home.desc}">
+    <meta property="og:title" th:content="#{meta.home.title}">
+    <meta property="og:description" th:content="#{meta.home.desc}">
+    <script type="application/ld+json" th:inline="javascript">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Microline",
+        "url": /*[[${baseUrl}]]*/ "https://www.microline.com.tr",
+        "logo": /*[[${baseUrl} + '/img/brand/logo.png']]*/ ""
+    }
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <!--/* Hero */-->
+    <section class="hero">
+        <div class="container hero-inner hero-with-media">
+            <div class="hero-text">
+                <h1 class="hero-title" th:text="#{home.hero.title}">Hayal gücü kartonla buluşunca</h1>
+                <p class="hero-subtitle" th:text="#{home.hero.subtitle}">Microline tanıtım metni</p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary btn-lg" th:if="${flagship != null}"
+                       th:href="${@localeUrls.productPath(flagship, #locale)}"
+                       th:text="#{home.hero.cta}">Microline'ı Keşfet</a>
+                    <a class="btn btn-secondary btn-lg" th:if="${cuttingTools != null}"
+                       th:href="${@localeUrls.collectionPath(cuttingTools, #locale)}"
+                       th:text="#{home.hero.ctaSecondary}">Kesim Araçlarını Gör</a>
+                </div>
+            </div>
+            <img class="hero-media" th:src="@{/img/pages/hero-home.jpg}" th:alt="#{home.hero.imageAlt}"
+                 alt="" fetchpriority="high">
+        </div>
+    </section>
+
+    <!--/* Güven şeridi */-->
+    <section class="trust-strip">
+        <div class="container trust-strip-inner">
+            <p class="trust-item" th:text="#{home.trust.shipping}">Ücretsiz kargo</p>
+            <p class="trust-item" th:text="#{home.trust.warranty}">2 yıl garanti</p>
+            <p class="trust-item" th:text="#{home.trust.blade}">Çocuk güvenli kapalı bıçak</p>
+            <p class="trust-item" th:text="#{home.trust.etbis}">ETBİS kayıtlı satıcı</p>
+        </div>
+    </section>
+
+    <!--/* Nasıl çalışır — 3 adım */-->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-heading" th:text="#{home.how.heading}">Nasıl çalışır?</h2>
+            <ol class="grid grid-3 steps-grid">
+                <li class="step-card">
+                    <span class="step-number" aria-hidden="true">1</span>
+                    <h3 th:text="#{home.how.step1.title}">Kartonu yerleştirin</h3>
+                    <p class="card-body" th:text="#{home.how.step1.body}">Adım açıklaması</p>
+                </li>
+                <li class="step-card">
+                    <span class="step-number" aria-hidden="true">2</span>
+                    <h3 th:text="#{home.how.step2.title}">Güvenle kesin</h3>
+                    <p class="card-body" th:text="#{home.how.step2.body}">Adım açıklaması</p>
+                </li>
+                <li class="step-card">
+                    <span class="step-number" aria-hidden="true">3</span>
+                    <h3 th:text="#{home.how.step3.title}">Yaratın ve oynayın</h3>
+                    <p class="card-body" th:text="#{home.how.step3.body}">Adım açıklaması</p>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!--/* Öne çıkan ürünler */-->
+    <section class="featured-products" th:if="${!featuredProducts.isEmpty()}">
+        <div class="container">
+            <h2 class="section-heading" th:text="#{home.featured.heading}">Öne çıkan ürünler</h2>
+            <div class="product-grid product-grid-4">
+                <th:block th:each="p : ${featuredProducts}">
+                    <article th:replace="~{fragments/components :: product-card(${p})}"></article>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <!--/* Değer önerileri */-->
+    <section class="value-props">
+        <div class="container">
+            <h2 class="section-heading" th:text="#{home.values.heading}">Neden Microline?</h2>
+            <div class="grid grid-3">
+                <article class="card">
+                    <h3 class="card-title" th:text="#{home.value.safety.title}">Çocuk Güvenli Tasarım</h3>
+                    <p class="card-body" th:text="#{home.value.safety.body}">Açıklama</p>
+                </article>
+                <article class="card">
+                    <h3 class="card-title" th:text="#{home.value.creativity.title}">Sınırsız Yaratıcılık</h3>
+                    <p class="card-body" th:text="#{home.value.creativity.body}">Açıklama</p>
+                </article>
+                <article class="card">
+                    <h3 class="card-title" th:text="#{home.value.eco.title}">Sürdürülebilir Oyun</h3>
+                    <p class="card-body" th:text="#{home.value.eco.body}">Açıklama</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!--/* Avantajlı set çağrısı */-->
+    <section class="bundle-teaser" th:if="${bundles != null}">
+        <div class="container bundle-teaser-inner">
+            <h2 th:text="#{home.bundle.heading}">1 makine + 3 eklenti = ∞ yaratım</h2>
+            <p class="bundle-teaser-body" th:text="#{home.bundle.body}">Set açıklaması</p>
+            <a class="btn btn-primary" th:href="${@localeUrls.collectionPath(bundles, #locale)}"
+               th:text="#{home.bundle.cta}">Avantajlı Setleri İncele</a>
+        </div>
+    </section>
+
+    <section class="newsletter">
+        <div class="container newsletter-inner">
+            <h2 th:text="#{home.newsletter.heading}">Yeni projelerden ilk siz haberdar olun</h2>
+            <p class="newsletter-body" th:text="#{home.newsletter.body}">Bülten açıklaması</p>
+
+            <div class="form-banner form-banner-success" role="status" th:if="${newsletterSuccess}">
+                <p th:text="#{form.newsletter.success}">Aboneliğiniz alındı, teşekkürler!</p>
+            </div>
+            <div class="form-banner form-banner-error" role="alert" th:if="${newsletterError}">
+                <p th:text="#{form.newsletter.error}">Lütfen geçerli bir e-posta girin ve onay kutusunu işaretleyin.</p>
+            </div>
+
+            <form th:if="${newsletterSuccess == null}" class="newsletter-form" method="post"
+                  th:action="${currentLang == 'tr'} ? @{/tr/bulten-abonelik} : @{/en/newsletter}">
+                <input type="hidden" name="redirect" th:value="${currentLang == 'tr'} ? '/tr/' : '/en/'">
+                <div class="hp-field" aria-hidden="true">
+                    <label for="newsletter-website">Website</label>
+                    <input type="text" id="newsletter-website" name="website" tabindex="-1" autocomplete="off">
+                </div>
+                <div class="newsletter-row">
+                    <label class="visually-hidden" for="newsletter-email"
+                           th:text="#{home.newsletter.email}">E-posta adresiniz</label>
+                    <input class="newsletter-input" type="email" id="newsletter-email" name="email" required
+                           th:placeholder="#{home.newsletter.email}">
+                    <button class="btn btn-primary" type="submit" th:text="#{common.subscribe}">Abone Ol</button>
+                </div>
+                <div class="checkbox-row newsletter-consent">
+                    <input type="checkbox" id="newsletter-kvkk" name="kvkkConsent" value="true" required>
+                    <label for="newsletter-kvkk">
+                        <span th:text="#{form.kvkk.label}">Kişisel verilerimin işlenmesini onaylıyorum.</span>
+                        <a th:href="${currentLang == 'tr'} ? '/tr/kvkk-aydinlatma-metni' : '/en/kvkk-privacy-notice'"
+                           th:text="#{form.kvkk.linkText}">KVKK Aydınlatma Metni</a>
+                    </label>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+</body>
+</html>

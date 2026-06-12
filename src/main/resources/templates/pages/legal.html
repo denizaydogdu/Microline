@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="${page.getTitle(#locale)} + ' — ' + #{site.name}">Yasal — Microline</title>
+    <meta name="robots" content="noindex, follow">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-hero">
+        <div class="container page-hero-inner">
+            <h1 th:text="${page.getTitle(#locale)}">Mesafeli Satış Sözleşmesi</h1>
+        </div>
+    </section>
+
+    <section class="legal-section">
+        <div class="container legal-container">
+            <div class="form-banner form-banner-error" role="note" th:if="${untranslated}">
+                <p th:text="#{legal.untranslated}">This document is currently available in Turkish only.</p>
+            </div>
+            <article class="legal-body" th:utext="${page.getBody(#locale)}">Yasal metin</article>
+        </div>
+    </section>
+</div>
+</body>
+</html>

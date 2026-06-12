@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="#{meta.safety.title}">Ürün Güvenliği — Microline</title>
+    <meta name="description" th:content="#{meta.safety.desc}">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-hero">
+        <div class="container page-hero-inner">
+            <h1 th:text="#{safety.hero.title}">Güvenlik sözümüz</h1>
+            <p class="page-hero-desc" th:text="#{safety.hero.body}">Güvenlik girişi</p>
+        </div>
+    </section>
+
+    <!--/* Sertifika kartları */-->
+    <section class="page-section">
+        <div class="container">
+            <h2 class="section-heading" th:text="#{safety.certs.heading}">Sertifikalar ve uygunluk</h2>
+            <div class="grid grid-3">
+                <article class="card">
+                    <p class="cert-issuer" th:text="#{safety.cert.en71.issuer}">Avrupa oyuncak güvenliği standardı</p>
+                    <h3 class="card-title" th:text="#{safety.cert.en71.title}">EN 71-1 / -2 / -3</h3>
+                    <p class="card-body" th:text="#{safety.cert.en71.body}">Açıklama</p>
+                </article>
+                <article class="card">
+                    <p class="cert-issuer" th:text="#{safety.cert.ce.issuer}">AB uygunluk işareti</p>
+                    <h3 class="card-title" th:text="#{safety.cert.ce.title}">CE + Uygunluk Beyanı</h3>
+                    <p class="card-body" th:text="#{safety.cert.ce.body}">Açıklama</p>
+                </article>
+                <article class="card">
+                    <p class="cert-issuer" th:text="#{safety.cert.rohs.issuer}">Tehlikeli madde kısıtlaması</p>
+                    <h3 class="card-title" th:text="#{safety.cert.rohs.title}">RoHS</h3>
+                    <p class="card-body" th:text="#{safety.cert.rohs.body}">Açıklama</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!--/* İstatistik bandı (yer tutucu pazarlama değerleri) */-->
+    <section class="stat-band">
+        <div class="container">
+            <h2 class="visually-hidden" th:text="#{safety.stats.heading}">Rakamlarla güvenlik</h2>
+            <div class="stat-band-inner">
+                <p class="stat">
+                    <span class="stat-value" th:text="#{safety.stat.1.value}">10.000+</span>
+                    <span class="stat-label" th:text="#{safety.stat.1.label}">kesim testi</span>
+                </p>
+                <p class="stat">
+                    <span class="stat-value" th:text="#{safety.stat.2.value}">14</span>
+                    <span class="stat-label" th:text="#{safety.stat.2.label}">prototip revizyonu</span>
+                </p>
+                <p class="stat">
+                    <span class="stat-value" th:text="#{safety.stat.3.value}">0</span>
+                    <span class="stat-label" th:text="#{safety.stat.3.label}">açıkta bıçak</span>
+                </p>
+            </div>
+            <p class="stat-note" th:text="#{safety.stats.note}">Yer tutucu not</p>
+        </div>
+    </section>
+
+    <!--/* Test raporu CTA → iletişim */-->
+    <section class="cta-band">
+        <div class="container cta-band-inner">
+            <h2 th:text="#{safety.cta.title}">Test raporu talep edin</h2>
+            <p class="cta-band-body" th:text="#{safety.cta.body}">CTA açıklaması</p>
+            <a class="btn btn-primary btn-lg" th:href="${routes['CONTACT'].path(#locale)}"
+               th:text="#{safety.cta.button}">Rapor Talep Et</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>

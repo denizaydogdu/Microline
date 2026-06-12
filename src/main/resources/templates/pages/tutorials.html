@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout-dialect"
+      layout:decorate="~{layout/base}" lang="tr">
+<head>
+    <title th:text="#{meta.tutorials.title}">Eğitimler — Microline</title>
+    <meta name="description" th:content="#{meta.tutorials.desc}">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-hero">
+        <div class="container page-hero-inner">
+            <h1 th:text="#{tutorials.hero.title}">Eğitimler ve proje fikirleri</h1>
+            <p class="page-hero-desc" th:text="#{tutorials.hero.subtitle}">Eğitim hub girişi</p>
+        </div>
+    </section>
+
+    <section class="page-section">
+        <div class="container">
+            <div class="tutorial-grid" th:if="${!tutorials.isEmpty()}">
+                <article class="tutorial-card" th:each="t : ${tutorials}">
+                    <a class="tutorial-card-link" th:href="${@localeUrls.tutorialPath(t, #locale)}">
+                        <div class="tutorial-card-media">
+                            <img th:if="${t.coverImageUrl != null}" th:src="@{${t.coverImageUrl}}"
+                                 th:alt="${t.getTitle(#locale)}" alt="" loading="lazy">
+                            <span th:if="${t.coverImageUrl == null}" aria-hidden="true"
+                                  th:text="${t.getTitle(#locale)}">Eğitim kapağı</span>
+                        </div>
+                        <span class="difficulty-badge"
+                              th:classappend="'difficulty-' + ${t.difficulty.cssSuffix()}"
+                              th:text="${#messages.msg('difficulty.' + t.difficulty.name())}">Başlangıç</span>
+                        <h3 class="tutorial-card-title" th:text="${t.getTitle(#locale)}">Eğitim başlığı</h3>
+                        <p class="tutorial-card-excerpt" th:text="${t.getExcerpt(#locale)}">Özet</p>
+                    </a>
+                </article>
+            </div>
+            <p class="tutorials-empty" th:if="${tutorials.isEmpty()}"
+               th:text="#{tutorials.empty}">Henüz eğitim yayınlanmadı.</p>
+        </div>
+    </section>
+</div>
+</body>
+</html>

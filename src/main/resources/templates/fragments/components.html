@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<body>
+<!--/* Ürün kartı — koleksiyon grid'i ve ana sayfa "öne çıkanlar" ortak kullanır. */-->
+<article class="product-card" th:fragment="product-card(p)">
+    <a class="product-card-link" th:href="${@localeUrls.productPath(p, #locale)}">
+        <div class="product-card-media">
+            <img th:if="${p.heroImageUrl != null}" th:src="@{${p.heroImageUrl}}"
+                 th:alt="${p.getName(#locale)}" alt="" loading="lazy">
+            <span th:if="${p.heroImageUrl == null}" aria-hidden="true"
+                  th:text="${p.getName(#locale)}">Ürün görseli</span>
+        </div>
+        <h3 class="product-card-name" th:text="${p.getName(#locale)}">Ürün adı</h3>
+        <p class="product-card-tagline" th:text="${p.getTagline(#locale)}">Ürün sloganı</p>
+        <p class="product-card-price">
+            <span class="price" th:text="${@prices.format(p.priceAmount, #locale)}">4.990 ₺</span>
+            <del class="price-compare" th:if="${p.compareAtPrice != null}"
+                 th:text="${@prices.format(p.compareAtPrice, #locale)}">5.990 ₺</del>
+        </p>
+    </a>
+</article>
+</body>
+</html>
